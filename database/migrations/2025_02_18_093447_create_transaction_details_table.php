@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('quantity');
+            $table->decimal('price', 10, 2);
+            $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
