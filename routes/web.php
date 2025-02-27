@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return "Halaman Company Profile";
+    return view("test");
 });
 
 Route::get('/login', function (){
