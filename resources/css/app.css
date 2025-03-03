@@ -1,2 +1,10 @@
 @import "tailwindcss";
 @source "../views";
+
+.primary-background{
+    background-color: #37496A;
+}
+
+.primary-text{
+    color: #37496A;
+}
