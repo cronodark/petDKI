@@ -7,5 +7,9 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function (){
-    return "Halaman Login";
-});
+    return view("login");
+})->name("login");
+
+Route::get('/test', function (){
+    return view("layouts.store");
+})->name("test");
