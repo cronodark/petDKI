@@ -6,14 +6,14 @@
         <h1 class="text-4xl font-bold text-center text-blue-700">Pet DKI</h1>
 
         <!-- Form -->
-        <form action="{{ route('login') }}" method="POST" class="mt-6">
+        <form action="{{ route('auth') }}" method="POST" class="mt-6">
             @csrf
             <!-- Input Username -->
             <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                <input type="text" id="username" name="username" required
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username/email</label>
+                <input type="text" id="identifier" name="identifier" required
                     class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter your username">
+                    placeholder="Masukkan Email/Username">
             </div>
 
             <!-- Input Password -->
