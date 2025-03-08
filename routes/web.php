@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,9 +19,12 @@ Route::middleware("auth")->group(function(){
 
     //route
     Route::middleware("role:manager")->group(function(){
-        Route::get('/test-manager', function(){
-            return "Test Manager";
-        });
+        Route::get('/worker', [WorkerController::class, 'index'])->name("worker.index");
+        Route::get('/worker/add', [WorkerController::class, 'create'])->name("worker.create");
+        Route::post('/worker/add', [WorkerController::class, 'store'])->name("worker.store");
+        Route::get('/worker/show/{id}', [WorkerController::class, 'show'])->name("worker.show");
+        Route::put('/worker/update/{id}', [WorkerController::class, 'update'])->name("worker.update");
+        Route::delete('/worker/{id}', [WorkerController::class, 'destroy'])->name("worker.destroy");
     });
 
     //route
