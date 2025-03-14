@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,9 +25,15 @@ Route::middleware("auth")->group(function(){
         Route::get('/worker', [WorkerController::class, 'index'])->name("worker.index");
         Route::get('/worker/add', [WorkerController::class, 'create'])->name("worker.create");
         Route::post('/worker/add', [WorkerController::class, 'store'])->name("worker.store");
-        Route::get('/worker/show/{id}', [WorkerController::class, 'show'])->name("worker.show");
-        Route::put('/worker/update/{id}', [WorkerController::class, 'update'])->name("worker.update");
+        Route::get('/worker/{id}', [WorkerController::class, 'show'])->name("worker.show");
+        Route::put('/worker/{id}', [WorkerController::class, 'update'])->name("worker.update");
         Route::delete('/worker/{id}', [WorkerController::class, 'destroy'])->name("worker.destroy");
+
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
+
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
     });
 
     //route
