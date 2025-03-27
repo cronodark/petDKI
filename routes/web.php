@@ -34,13 +34,14 @@ Route::middleware("auth")->group(function(){
 
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
         Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+
     });
 
     //route
     Route::middleware("role:cashier")->group(function(){
-        Route::get('/test-cashier', function(){
-            return "Test Cashier";
-        });
+        Route::get('/pos/create', [TransactionController::class, 'create'])->name('transactions.create');
+        Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.cashier.index');
     });
 
     //route

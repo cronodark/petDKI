@@ -35,6 +35,9 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashboard'); // redirect ke halaman dashboard
         }
+        return back()->withErrors([
+            'identifier' => 'The provided credentials do not match our records.',
+        ]);
     }
 
     public function logout(Request $request)
