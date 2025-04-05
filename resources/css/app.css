@@ -1,10 +1,17 @@
 @import "tailwindcss";
 @source "../views";
 
-.primary-background{
+.primary-background {
     background-color: #37496A;
 }
 
-.primary-text{
+.primary-text {
     color: #37496A;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+a{
+    cursor: pointer;
 }

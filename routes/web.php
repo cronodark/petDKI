@@ -2,15 +2,15 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view("test");
-});
+Route::get('/', [CompanyProfileController::class, 'index'])->name('company-profile.index');
+Route::get('/catalog', [CompanyProfileController::class, 'catalog'])->name('company-profile.catalog');
 
 Route::get('/login', [AuthController::class, 'login'])->name("login")->middleware("guest");
 Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->middleware("guest");
@@ -71,9 +71,6 @@ Route::get('/test', function (){
     return view("layouts.store");
 })->name("test");
 
-Route::get('/landing', function (){
-    return view("landing");
-})->name("landing");
 
 Route::get('/etalase', function () {
     return view("etalase");
