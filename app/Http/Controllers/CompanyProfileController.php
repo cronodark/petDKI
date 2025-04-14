@@ -16,6 +16,6 @@ class CompanyProfileController extends Controller
     {
         //fecth categories
         $categories = Category::with('products')->get();
-        return view('etalase', compact('categories'));
+        return view('catalog', compact('categories'));
     }
 }

@@ -8,6 +8,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return "ini halaman dashboard";
+        return "ini halaman dashboard " . auth()->user()->role;
     }
 }
