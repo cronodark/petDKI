@@ -11,28 +11,24 @@
         <div class="mb-6 md:mb-0">
             <h3 class="font-semibold text-gray-700">Layanan</h3>
             <ul class="text-gray-600 space-y-1">
-                <li><a href="#" class="hover:text-gray-800">Produk</a></li>
-                <li><a href="#" class="hover:text-gray-800">Pemesanan</a></li>
-                <li><a href="#" class="hover:text-gray-800">Tentang Kami</a></li>
+                <li><a href="#product" class="hover:text-gray-800">Produk</a></li>
+                <li><a href="#maps" class="hover:text-gray-800">Pemesanan</a></li>
+                <li><a href="#about" class="hover:text-gray-800">Tentang Kami</a></li>
             </ul>
         </div>
 
         <!-- Kontak -->
         <div class="mb-6 md:mb-0">
-            <h3 class="font-semibold text-gray-700 bg-[#FBBC05] p-1 px-2 py-1 w-fit inline-block" >Get In Touch!</h3>
+            <h3 class="font-semibold text-gray-700 bg-[#FBBC05] p-1 px-2 py-1 w-fit inline-block">Get In Touch!</h3>
             <p class="text-gray-600">Email: shadyllag@gmail.com</p>
             <p class="text-gray-600">Phone: 085810274244</p>
         </div>
 
     </div>
 
-         <!-- Garis Panjang -->
-        <hr class="border-t border-black-400 my-2 w-full">
+    <!-- Garis Panjang -->
+    <hr class="border-t border-black-400 my-2 w-full">
 
-        <!-- Teks Kecil di Bawah -->
-        <p class="text-sm text-black-600 ml-60 ">@ PetDKI | Terms & Conditions</p>
-
-
-
-    
-        
+    <!-- Teks Kecil di Bawah -->
+    <p class="text-sm text-black-600 ml-60 ">@ PetDKI | Terms & Conditions</p>
+</footer>

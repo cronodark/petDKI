@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StockAdjustments;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,10 +44,28 @@ class TransactionController extends Controller
                 'total_price' => $request->total_price
             ]);
             foreach($request->items as $item){
+                $product = Product::find($item['product_id']);
+
+                if($product->stock < $item['quantity']){
+                    return back()->with('error', 'Stok tidak mencukupi untuk produk '.$product->name);
+                }
+
                 $transaction->transactionDetails()->create([
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price']
+                ]);
+
+                $product->update([
+                    'stock' => $product->stock - $item['quantity']
+                ]);
+
+                $data = StockAdjustments::create([
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'adjustment_type' => 'out',
+                    'reason' => 'Penjualan produk',
+                    'user_id' => Auth::user()->id,
                 ]);
             }
             DB::commit();
