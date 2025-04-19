@@ -19,9 +19,9 @@
     </nav>
 
     <!-- Main Container -->
-    <div class="max-w-screen-xl mx-auto flex gap-6 m-10 w-2/3">
+    <div class="max-w-screen-xl mx-10 flex gap-50 content-between justify-between w-full h-full mb-10">
         <!-- Sidebar / Categories -->
-        <div class="w-1/4 bg-white p-6 rounded-lg shadow-lg border border-gray-300">
+        <div class="w-1/4 bg-white p-6 rounded-lg shadow-lg border border-gray-300 h-fit">
             <h2 class="text-lg font-bold mb-4">Etalase</h2>
             <ul class="space-y-2">
                 <li class="font-semibold">
@@ -40,11 +40,16 @@
         </div>
 
         <!-- Product Content -->
-        <div class="w-3/4 grid grid-cols-3 gap-6">
+        <div class="w-3/4 grid grid-cols-3 gap-6 h-fit">
             @forelse ($products as $product)
                 <div class="bg-white p-4 rounded-lg shadow-md border border-gray-300">
-                    <img src="{{ asset($product->image) }}" alt="{{ $product->product_name }}"
-                        class="w-full h-40 object-cover rounded">
+                    @if ($product->photo)
+                        <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->product_name }}"
+                            class="w-full h-40 object-cover rounded">
+                    @else
+                        <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="No Image"
+                            class="w-full h-40 object-cover rounded">
+                    @endif
                     <p class="mt-2 text-center font-semibold">{{ $product->product_name }}</p>
                 </div>
             @empty
