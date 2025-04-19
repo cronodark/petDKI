@@ -27,7 +27,7 @@
     </div>
 
     <!-- Garis Panjang -->
-    <hr class="border-t border-black-400 my-2 w-full">
+    <hr class="border-t border-black-400 my-2">
 
     <!-- Teks Kecil di Bawah -->
     <p class="text-sm text-black-600 ml-60 ">@ PetDKI | Terms & Conditions</p>
