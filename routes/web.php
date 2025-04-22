@@ -17,7 +17,6 @@ Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->m
 
 Route::middleware("auth")->group(function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
-
     Route::get('/dashboard', [DashboardController ::class, 'index'])->name("dashboard");
 
     //route
@@ -70,6 +69,10 @@ Route::middleware("auth")->group(function(){
 Route::get('/test', function (){
     return view("layouts.store");
 })->name("test");
+
+Route::get('/main', function () {
+    return view("layouts.store");
+})->name("main");
 
 
 Route::get('/etalase', function () {
