@@ -12,13 +12,14 @@ class WorkerController extends Controller
 {
     public function index()
     {
-        $workers = User::where('role', '!=', 'manager')->get();
-        return view('worker.index', compact('workers'));
+        $workers = User::where('role', '!=', 'manager')->paginate(5);
+        return view('dashboard.admin.worker.index', compact('workers'));
     }
 
     public function create()
     {
-        return view('worker.create');
+
+        return view('dashboard.admin.worker.create');
     }
 
     public function store(Request $request)
@@ -47,15 +48,14 @@ class WorkerController extends Controller
             'photo.max'         => 'Photo maksimal berukuran 20MB.'
         ]);
 
-        if($request->hasFile('photo')){
+        if ($request->hasFile('photo')) {
             $photo = $request->file('photo')->store('profile', 'public');
             $worker['photo'] = $photo;
         }
 
         try {
             User::create($worker);
-
-            return redirect()->route('worker.create')->with('success', 'Pegawai berhasil ditambahkan');
+            return redirect()->route('manager.worker.index')->with('success', 'Pegawai berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->route('worker.create')->with('error', 'Pegawai gagal ditambahkan');
         }
@@ -64,31 +64,36 @@ class WorkerController extends Controller
     public function show($id)
     {
         $worker = User::findOrFail($id);
-        return view('worker.show', compact('worker'));
+        return view('dashboard.admin.worker.edit', compact('worker'));
     }
 
     public function update(Request $request, $id)
     {
         $worker = User::findOrFail($id);
         $worker->update($request->except('photo'));
-        if($request->hasFile('photo')){
-            if($worker->photo != null){
-                Storage::delete('public/'.$worker->photo);
+        if ($request->hasFile('photo')) {
+            if ($worker->photo != null) {
+                Storage::delete('public/' . $worker->photo);
             }
             $photo = $request->file('photo')->store('profile', 'public');
             $worker->photo = $photo;
+        }
+        try {
             $worker->save();
+            return redirect()->route('manager.worker.index')->with('success', 'Pegawai berhasil diubah');
+        } catch (\Exception $e) {
+            return redirect()->route('manager.worker.index')->with('error', 'Pegawai gagal diubah');
         }
     }
 
     public function destroy($id)
     {
         $worker = User::findOrFail($id);
-        try{
+        try {
             $worker->delete();
-            return redirect()->route('worker.index')->with('success', 'Pegawai berhasil dihapus');
+            return redirect()->route('manager.worker.index')->with('success', 'Pegawai berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('worker.index')->with('error', 'Pegawai gagal dihapus');
+            return redirect()->route('manager.worker.index')->with('error', 'Pegawai gagal dihapus');
         }
     }
 }

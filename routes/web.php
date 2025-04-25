@@ -16,17 +16,17 @@ Route::get('/login', [AuthController::class, 'login'])->name("login")->middlewar
 Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->middleware("guest");
 
 Route::middleware("auth")->group(function(){
-    Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+    Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
     Route::get('/dashboard', [DashboardController ::class, 'index'])->name("dashboard");
 
     //route
     Route::middleware("role:manager")->group(function(){
-        Route::get('/worker', [WorkerController::class, 'index'])->name("worker.index");
-        Route::get('/worker/add', [WorkerController::class, 'create'])->name("worker.create");
-        Route::post('/worker/add', [WorkerController::class, 'store'])->name("worker.store");
-        Route::get('/worker/{id}', [WorkerController::class, 'show'])->name("worker.show");
-        Route::put('/worker/{id}', [WorkerController::class, 'update'])->name("worker.update");
-        Route::delete('/worker/{id}', [WorkerController::class, 'destroy'])->name("worker.destroy");
+        Route::get('/worker', [WorkerController::class, 'index'])->name("manager.worker.index");
+        Route::get('/worker/add', [WorkerController::class, 'create'])->name("manager.worker.create");
+        Route::post('/worker/add', [WorkerController::class, 'store'])->name("manager.worker.store");
+        Route::get('/worker/{id}', [WorkerController::class, 'show'])->name("manager.worker.show");
+        Route::post('/worker/{id}', [WorkerController::class, 'update'])->name("manager.worker.update");
+        Route::delete('/worker/{id}', [WorkerController::class, 'destroy'])->name("manager.worker.destroy");
 
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
