@@ -18,8 +18,8 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::with('category')->latest()->paginate(10);
-        return view('products.index', compact('products')); // ganti nama view dan kirim data products
+        $products = Product::with('category')->paginate(5);
+        return view('dashboard.admin.stock', compact('products')); // ganti nama view dan kirim data products
     }
 
     /**
@@ -67,7 +67,7 @@ class ProductController extends Controller
         }
 
         $validated = $validator->validated();
-        
+
         // handle upload file
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -90,7 +90,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        
+
         $validator = Validator::make($request->all(), [
             'product_name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
@@ -113,7 +113,7 @@ class ProductController extends Controller
             if ($product->photo && Storage::disk('public')->exists($product->photo)) {
                 Storage::disk('public')->delete($product->photo);
             }
-            
+
             $photo = $request->file('photo');
             $filename = time() . '.' . $photo->getClientOriginalExtension();
             $path = $photo->storeAs('products', $filename, 'public');
@@ -134,7 +134,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        
+
         // hapus foto produk kalo ada
         if ($product->photo && Storage::disk('public')->exists($product->photo)) {
             Storage::disk('public')->delete($product->photo);
@@ -151,20 +151,20 @@ class ProductController extends Controller
     public function generatePdfRecap(Request $request)
     {
         $type = $request->input('type', 'monthly'); // monthly, weekly, daily
-        
+
         // ambil filter tanggal
-        $startDate = $request->input('start_date') 
+        $startDate = $request->input('start_date')
             ? Carbon::parse($request->input('start_date'))->startOfDay()
             : Carbon::now()->startOfMonth();
-            
+
         $endDate = $request->input('end_date')
             ? Carbon::parse($request->input('end_date'))->endOfDay()
             : Carbon::now();
-        
+
         // ambil produk yang dibuat dalam rentang tanggal
         $query = Product::whereBetween('created_at', [$startDate, $endDate])
             ->with('category');
-        
+
         // grup berdasarkan periode waktu sesuai tipe
         if ($type == 'monthly') {
             $products = $query->get()->groupBy(function($item) {
@@ -182,14 +182,14 @@ class ProductController extends Controller
             });
             $title = 'Rekap Produk Harian';
         }
-        
+
         // proses data buat laporan
         $reportData = [];
         foreach ($products as $period => $items) {
             $totalValue = $items->sum(function($item) {
                 return $item->price * $item->stock;
             });
-            
+
             $reportData[] = [
                 'period' => $period,
                 'total_products' => $items->count(),
@@ -198,7 +198,7 @@ class ProductController extends Controller
                 'products' => $items
             ];
         }
-        
+
         // generate PDF
         $pdf = PDF::loadView('products.recap_pdf', [
             'data' => $reportData,
@@ -206,7 +206,7 @@ class ProductController extends Controller
             'type' => $type,
             'generated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
-        
+
         return $pdf->download('rekap_produk_' . $type . '_' . now()->format('YmdHis') . '.pdf');
     }
 }
