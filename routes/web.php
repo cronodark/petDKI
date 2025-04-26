@@ -15,38 +15,37 @@ Route::get('/catalog', [CompanyProfileController::class, 'catalog'])->name('comp
 Route::get('/login', [AuthController::class, 'login'])->name("login")->middleware("guest");
 Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->middleware("guest");
 
-Route::middleware("auth")->group(function(){
+Route::middleware("auth")->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
-    Route::get('/dashboard', [DashboardController ::class, 'index'])->name("dashboard");
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name("dashboard");
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
 
     //route
-    Route::middleware("role:manager")->group(function(){
-        Route::get('/worker', [WorkerController::class, 'index'])->name("manager.worker.index");
-        Route::get('/worker/add', [WorkerController::class, 'create'])->name("manager.worker.create");
-        Route::post('/worker/add', [WorkerController::class, 'store'])->name("manager.worker.store");
-        Route::get('/worker/{id}', [WorkerController::class, 'show'])->name("manager.worker.show");
-        Route::post('/worker/{id}', [WorkerController::class, 'update'])->name("manager.worker.update");
-        Route::delete('/worker/{id}', [WorkerController::class, 'destroy'])->name("manager.worker.destroy");
+    Route::middleware("role:manager")->group(function () {
+        Route::prefix('worker')->as('manager.worker.')->group(function () {
+            Route::get('/', [WorkerController::class, 'index'])->name('index');
+            Route::get('/add', [WorkerController::class, 'create'])->name('create');
+            Route::post('/add', [WorkerController::class, 'store'])->name('store');
+            Route::get('/{id}', [WorkerController::class, 'show'])->name('show');
+            Route::post('/{id}', [WorkerController::class, 'update'])->name('update');
+            Route::delete('/{id}', [WorkerController::class, 'destroy'])->name('destroy');
+        });
 
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
+    });
 
-        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
-        Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+    //route
+    Route::middleware("role:cashier")->group(function () {
+        Route::get('/pos/create', [TransactionController::class, 'create'])->name('cashier.transactions.create');
+        Route::post('/transactions', [TransactionController::class, 'store'])->name('cashier.transactions.store');
 
     });
 
     //route
-    Route::middleware("role:cashier")->group(function(){
-        Route::get('/pos/create', [TransactionController::class, 'create'])->name('transactions.create');
-        Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
-        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.cashier.index');
-    });
-
-    //route
-    Route::middleware("role:warehouse")->group(function(){
+    Route::middleware("role:warehouse")->group(function () {
         //product
-        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
         Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
@@ -65,16 +64,3 @@ Route::middleware("auth")->group(function(){
         Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     });
 });
-
-Route::get('/test', function (){
-    return view("layouts.store");
-})->name("test");
-
-Route::get('/main', function () {
-    return view("layouts.store");
-})->name("main");
-
-
-Route::get('/etalase', function () {
-    return view("etalase");
-})->name("etalase");

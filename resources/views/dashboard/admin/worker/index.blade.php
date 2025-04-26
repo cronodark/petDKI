@@ -45,8 +45,8 @@
                                     <img src="{{ 'storage/' . $worker->photo }}" alt="{{ $worker->name }}"
                                         class="w-12 h-12 rounded-full object-cover" />
                                 @else
-                                    <img src="{{ asset('images/defaultProfile.png') }}"
-                                        alt="{{ $worker->name }}" class="w-12 h-12 rounded-full object-cover" />
+                                    <img src="{{ asset('images/defaultProfile.png') }}" alt="{{ $worker->name }}"
+                                        class="w-12 h-12 rounded-full object-cover" />
                                 @endif
                             </div>
                             <span class="text-gray-700 font-medium px-2">{{ $worker->name }}</span>
@@ -92,15 +92,57 @@
                 <!-- Pagination with summary -->
                 <div class="mt-6">
                     @if ($workers->hasPages())
-                        <div class="mt-6 flex flex-col lg:flex-row justify-between items-center">
-                            <p class="text-gray-500 text-sm mb-2 lg:mb-0">
-                                Menampilkan {{ $workers->firstItem() }} sampai {{ $workers->lastItem() }} dari total
-                                {{ $workers->total() }} karyawan
-                            </p>
-                            <div class="text-center">
-                                {{ $workers->onEachSide(1)->links('vendor.pagination.tailwind') }}
+                        <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
+                            aria-label="Pagination" style="animation-delay: 0.6s">
+
+                            <!-- Previous Page -->
+                            @if ($workers->onFirstPage())
+                                <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
+                                        alt="Prev" class="object-contain w-3 aspect-[0.55]" />
+                                    <span>Previous</span>
+                                </span>
+                            @else
+                                <a href="{{ $workers->previousPageUrl() }}" class="flex gap-3 items-center btn-hover">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
+                                        alt="Prev" class="object-contain w-3 aspect-[0.55]" />
+                                    <span>Previous</span>
+                                </a>
+                            @endif
+
+                            <!-- Page Numbers -->
+                            <div class="flex gap-5 items-center self-stretch">
+                                @foreach ($workers->getUrlRange(1, $workers->lastPage()) as $page => $url)
+                                    @if ($page == $workers->currentPage())
+                                        <span
+                                            class="self-stretch px-3 py-1 text-white rounded-md bg-slate-600 text-center pulse-effect"
+                                            aria-current="page">
+                                            {{ $page }}
+                                        </span>
+                                    @else
+                                        <a href="{{ $url }}" class="btn-hover"
+                                            aria-label="Go to page {{ $page }}">
+                                            {{ $page }}
+                                        </a>
+                                    @endif
+                                @endforeach
                             </div>
-                        </div>
+
+                            <!-- Next Page -->
+                            @if ($workers->hasMorePages())
+                                <a href="{{ $workers->nextPageUrl() }}" class="flex gap-3.5 items-center btn-hover">
+                                    <span>Next</span>
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
+                                        alt="Next" class="object-contain w-3 aspect-[0.55]" />
+                                </a>
+                            @else
+                                <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
+                                    <span>Next</span>
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
+                                        alt="Next" class="object-contain w-3 aspect-[0.55]" />
+                                </span>
+                            @endif
+                        </nav>
                     @endif
                 </div>
             </section>
