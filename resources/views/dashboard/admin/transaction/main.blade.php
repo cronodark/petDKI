@@ -237,7 +237,7 @@
                     <div>{{ $transaction->id }}</div>
                     <div>{{ $transaction->transaction_date }}</div>
                     <div>{{ $transaction->user->name }}</div>
-                    <a href="{{ route('transactions.show', $transaction->id) }}" class="px-5 py-2 rounded-xl border-2 border-slate-600 btn-hover inline-block">
+                    <a href="{{ route(Auth::user()->role.'.transactions.show', $transaction->id) }}" class="px-5 py-2 rounded-xl border-2 border-slate-600 btn-hover inline-block">
                         Detail
                     </a>
                 </div>

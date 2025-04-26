@@ -70,26 +70,6 @@
                         </div>
                     </div>
                 @endforeach
-
-                {{-- <!-- Pagination -->
-                <nav class="flex justify-between items-center mt-6 text-slate-600 text-lg">
-                    <div class="flex items-center gap-2">
-                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                            alt="Prev" class="w-3" />
-                        <span>Previous</span>
-                    </div>
-                    <div class="flex gap-4">
-                        <span>1</span>
-                        <span class="bg-gray-600 text-white px-2 py-1 rounded-md">2</span>
-                        <span>3</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span>Next</span>
-                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                            alt="Next" class="w-3 rotate-180" />
-                    </div>
-                </nav> --}}
-                <!-- Pagination with summary -->
                 <div class="mt-6">
                     @if ($workers->hasPages())
                         <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
