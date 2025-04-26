@@ -13,19 +13,18 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        if(Auth::user()->role == 'manager'){
-            $transactions = Transaction::all();
-        }else{
-            $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        if (Auth::user()->role == 'manager') {
+            $transactions = Transaction::with('user')->paginate(5);
+        } else {
+            $transactions = Transaction::where('user_id', Auth::user()->id)->paginate(5);
         }
-        return view("transactions.index", compact("transactions"));
+        return view("dashboard.admin.transaction.main", compact("transactions"));
     }
 
     public function show($id)
     {
-        $transaction = Transaction::findOrFail($id);
-        $transaction->load('transactionDetails');
-        // return view("transactions.show", compact("transaction"));
+        $transaction = Transaction::with('transactionDetails.product.category', 'user')->findOrFail($id);
+        return view("dashboard.admin.transaction.detail", compact("transaction"));
     }
 
     public function create()
@@ -35,19 +34,20 @@ class TransactionController extends Controller
         return view("pos", compact("products"));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         DB::beginTransaction();
-        try{
+        try {
             $transaction = Transaction::create([
                 'transaction_date' => date('Y-m-d'),
                 'user_id' => Auth::user()->id,
                 'total_price' => $request->total_price
             ]);
-            foreach($request->items as $item){
+            foreach ($request->items as $item) {
                 $product = Product::find($item['product_id']);
 
-                if($product->stock < $item['quantity']){
-                    return back()->with('error', 'Stok tidak mencukupi untuk produk '.$product->name);
+                if ($product->stock < $item['quantity']) {
+                    return back()->with('error', 'Stok tidak mencukupi untuk produk ' . $product->name);
                 }
 
                 $transaction->transactionDetails()->create([
@@ -70,7 +70,7 @@ class TransactionController extends Controller
             }
             DB::commit();
             return back()->with('success', 'Transaksi berhasil disimpan');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Transaksi gagal disimpan');
         }
