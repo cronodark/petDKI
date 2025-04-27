@@ -232,16 +232,23 @@
 
         <!-- Table Rows -->
         <div id="table-rows" class="divide-y divide-slate-300">
-            @foreach ($transactions as $transaction)
-                <div class="grid grid-cols-4 gap-4 items-center px-10 py-5 text-center max-md:px-4">
-                    <div>{{ $transaction->id }}</div>
-                    <div>{{ $transaction->transaction_date }}</div>
-                    <div>{{ $transaction->user->name }}</div>
-                    <a href="{{ route(Auth::user()->role.'.transactions.show', $transaction->id) }}" class="px-5 py-2 rounded-xl border-2 border-slate-600 btn-hover inline-block">
-                        Detail
-                    </a>
+            @if ($transactions->isEmpty())
+                <div class="flex items-center justify-center h-32">
+                    <p class="text-slate-500">Tidak ada transaksi.</p>
                 </div>
-            @endforeach
+            @else
+                @foreach ($transactions as $transaction)
+                    <div class="grid grid-cols-4 gap-4 items-center px-10 py-5 text-center max-md:px-4">
+                        <div>{{ $transaction->id }}</div>
+                        <div>{{ $transaction->transaction_date }}</div>
+                        <div>{{ $transaction->user->name }}</div>
+                        <a href="{{ route('transactions.show', $transaction->id) }}"
+                            class="px-5 py-2 rounded-xl border-2 border-slate-600 btn-hover inline-block">
+                            Detail
+                        </a>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </section>
 
@@ -287,7 +294,7 @@
                 <span class="flex gap-3 opacity-50 cursor-not-allowed">
                     <span>Next</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
-                        alt="" class="w-3"/>
+                        alt="" class="w-3" />
                 </span>
             @endif
         </nav>

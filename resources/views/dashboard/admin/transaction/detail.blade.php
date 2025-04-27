@@ -35,7 +35,7 @@
         <div class="mt-0 w-full">
             <div class="flex flex-col lg:flex-row">
                 <!-- Order Product List - Left Column -->
-                <section class="lg:w-[36%] w-full pt-5 border-2 shadow-lg">
+                <section class="lg:w-[36%] w-full pt-5 border-2 shadow-lg min-h-screen max-h-fit">
                     <article class="flex flex-col grow pb-24 w-full bg-white shadow-sm rounded-lg">
                         <div class="w-full px-4 sm:px-6 md:px-8">
                             <div class="flex items-start gap-4">
@@ -51,9 +51,9 @@
                                 </div>
                             </div>
                             <hr class="mt-6 border border-gray-400 w-full" />
-                            <p class="mt-6 text-xl sm:text-2xl font-bold text-right text-blue-950">
+                            {{-- <p class="mt-6 text-xl sm:text-2xl font-bold text-right text-blue-950">
                                 Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
-                            </p>
+                            </p> --}}
                         </div>
 
                         <!-- Product List -->
@@ -67,11 +67,11 @@
                                             <h2 class="text-lg sm:text-xl font-bold text-blue-950">
                                                 {{ $transactionDetail->product->product_name }}</h2>
                                             <p class="text-sm text-slate-600">
-                                                {{ $transactionDetail->product->category->category_name }}</p>
+                                                {{ number_format($transactionDetail->price, 0, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <p class="text-lg sm:text-xl font-bold text-blue-950">Rp
-                                        {{ number_format($transactionDetail->price, 0, ',', '.') }}</p>
+                                        {{ number_format($transactionDetail->price * $transactionDetail->quantity, 0, ',', '.') }}</p>
                                 </div>
                             @endforeach
                         </div>
@@ -86,10 +86,10 @@
                                 <p class="text-sm sm:text-base font-semibold">Total Discount</p>
                                 <p class="text-sm sm:text-base font-semibold">-Rp 0</p>
                             </div> --}}
-                            <div class="flex justify-between py-2">
-                                <p class="text-sm sm:text-base font-semibold">Total</p>
-                                <p class="text-sm sm:text-base font-semibold">Rp
-                                    {{ number_format($transaction->total_price, 0, ',', '.') }}</p>
+                            <div class="flex justify-between py-2 text-[#213559]">
+                                <span class="font-bold text-2xl">Total</span>
+                                <span class="font-bold text-2xl">Rp
+                                    {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
                             </div>
                         </div>
 
@@ -103,7 +103,7 @@
                     <div class="self-stretch my-auto w-full">
                         <!-- Search Bar -->
                         <header
-                            class="py-8 px-3 sm:px-8 md:px-16 lg:pl-64 text-4xl font-bold text-white bg-slate-600 max-w-full">
+                            class="py-8 px-3 sm:px-8 md:px-16 lg:pl-64 text-4xl font-bold text-white bg-slate-600 max-w-full text-center">
                             PET DKI
                         </header>
                         {{-- <div
@@ -115,18 +115,23 @@
                             <input id="search" type="text" class="hidden" aria-label="Search products" />
                         </div> --}}
 
-
-                        <div class="mt-6 sm:mt-8 md:mt-9 mx-auto px-2">
+                        <div class="mt-6 sm:mt-8 md:mt-9 mx-5 px-2">
                             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
                                 @foreach ($transaction->transactionDetails as $transactionDetail)
                                     <div class="col-span-1">
                                         <article
                                             class="flex flex-col grow pt-4 sm:pt-5 md:pt-7 w-full text-sm sm:text-base font-bold text-center text-white bg-white rounded-md shadow-sm">
-                                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e93fa90abafa1a8ecbb588a8ddfbaab6a2918288?placeholderIfAbsent=true&apiKey=b6e760062608466c9c09a9a54edb9b26"
-                                                class="object-contain self-center max-w-full aspect-square w-[80px] sm:w-[100px] md:w-[113px]"
-                                                alt="Product A" />
+                                            @if ($transactionDetail->product->photo)
+                                                <img src="{{ asset('storage/' . $transactionDetail->product->photo) }}"
+                                                    class="w-full h-40 object-cover rounded-t-lg"
+                                                    alt="{{ $transactionDetail->product->product_name }}" />
+                                            @else
+                                                <img src="{{ asset('images/default.jpg') }}"
+                                                    class="w-full h-40 object-cover rounded-t-lg"
+                                                    alt="{{ $transactionDetail->product->product_name }}" />
+                                            @endif
                                             <h3
-                                                class="px-2 sm:px-8 md:px-14 pt-2 sm:pt-3 md:pt-3.5 pb-3 sm:pb-4 md:pb-5 mt-2 sm:mt-3 md:mt-4 rounded-none bg-slate-600">
+                                                class="px-2 sm:px-8 md:px-14 pt-2 sm:pt-3 md:pt-3.5 pb-3 sm:pb-4 md:pb-5 rounded-none bg-slate-600">
                                                 {{ $transactionDetail->product->product_name }}</h3>
                                             </h3>
                                         </article>

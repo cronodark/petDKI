@@ -173,8 +173,8 @@
                         @if (Auth::user()->role != 'warehouse')
                             {{-- transaksi --}}
                             <div class="nav-item w-full">
-                                <a href="{{ route(Auth::user()->role.'.transactions.index') }}"
-                                    class="flex gap-6 self-stretch ps-8 py-3.5 text-2xl font-medium whitespace-nowrap bg-transparent rounded-[30px_0px_0px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == Auth::user()->role.'.transactions.index' ? 'active' : '' }}">
+                                <a href="{{ route('transactions.index') }}"
+                                    class="flex gap-6 self-stretch ps-8 py-3.5 text-2xl font-medium whitespace-nowrap bg-transparent rounded-[30px_0px_0px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'transactions.index' ? 'active' : '' }}">
                                     <svg width="46" height="46" viewBox="0 0 46 46" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="fill-current">
                                         <path
@@ -190,8 +190,9 @@
                         @if (Auth::user()->role == 'cashier')
                             {{-- POS --}}
                             <div class="nav-item w-full">
-                                <a href="#"
-                                    class="flex gap-6 self-stretch ps-8 py-3.5 text-2xl font-medium whitespace-nowrap bg-transparent rounded-[30px_0px_0px_30px] text-white hover:bg-slate-500 transition nav-link">
+                                <a href="{{ route('cashier.transactions.create') }}"
+                                    class="flex gap-6 self-stretch ps-8 py-3.5 text-2xl font-medium whitespace-nowrap bg-transparent rounded-[30px_0px_0px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'cashier.transactions.create' ? 'active' : '' }}">
+                                    {{-- <img src="{{ asset('images/pos.png') }}" class="w-10" alt="POS icon" /> --}}
                                     <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="fill-current">
                                         <path

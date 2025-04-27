@@ -18,7 +18,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::with('category')->paginate(5);
+        $products = Product::with('category')->paginate(5);;
         return view('dashboard.admin.stock', compact('products')); // ganti nama view dan kirim data products
     }
 

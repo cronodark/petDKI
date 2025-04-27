@@ -18,8 +18,9 @@ Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->m
 Route::middleware("auth")->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
     Route::get('/dashboard', [DashboardController::class, 'index'])->name("dashboard");
-    // Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
-    // Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
     //route
     Route::middleware("role:manager")->group(function () {
@@ -32,16 +33,11 @@ Route::middleware("auth")->group(function () {
             Route::delete('/{id}', [WorkerController::class, 'destroy'])->name('destroy');
         });
 
-        Route::prefix('transactions')->as('manager.transactions.')->group(function () {
-            Route::get('/', [TransactionController::class, 'index'])->name('index');
-            Route::get('/{id}', [TransactionController::class, 'show'])->name('show');
-        });
+        // Route::prefix('transactions')->as('manager.transactions.')->group(function () {
+        //     Route::get('/', [TransactionController::class, 'index'])->name('index');
+        //     Route::get('/{id}', [TransactionController::class, 'show'])->name('show');
+        // });
 
-        Route::prefix('products')->as('manager.products.')->group(function () {
-            Route::get('/', [ProductController::class, 'index'])->name('index');
-        });
-
-        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
     });
 

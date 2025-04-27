@@ -47,7 +47,7 @@
                         <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->product_name }}"
                             class="w-full h-40 object-cover rounded">
                     @else
-                        <img src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" alt="No Image"
+                        <img src="{{ asset('images/default.jpg') }}" alt="No Image"
                             class="w-full h-40 object-cover rounded">
                     @endif
                     <p class="mt-2 text-center font-semibold">{{ $product->product_name }}</p>
