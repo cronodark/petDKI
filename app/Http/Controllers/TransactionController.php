@@ -30,8 +30,8 @@ class TransactionController extends Controller
     public function create()
     {
         //halaman pos
-        $products = Product::all();
-        return view("pos", compact("products"));
+        $products = Product::with('category')->where('stock', '>', 0)->get();
+        return view("dashboard.kasir.pos.main", compact("products"));
     }
 
     public function store(Request $request)
