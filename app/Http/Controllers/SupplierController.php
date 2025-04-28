@@ -10,26 +10,27 @@ use App\Models\Supplier;
 class SupplierController extends Controller
 {
     public function getSuppliers()
-{
-    $data = DB::table('suppliers')
-        ->select(
-            'id',
-            'name',
-            'description',
-            'photo_url as image_url',
-            'address',
-            'latitude',
-            'longitude',
-            'phone',
-            'category'
-        )
-        ->get();
+    {
+        $data = DB::table('suppliers')
+            ->select(
+                'id',
+                'name',
+                'description',
+                'photo_url as image_url',
+                'address',
+                'latitude',
+                'longitude',
+                'phone',
+                'category'
+            )
+            ->get();
 
-    return response()->json($data);
-}
+        return response()->json($data);
+    }
 
-public function webgis()
-{
-    $suppliers = Supplier::all(); 
-    return view('webgis', compact('suppliers')); 
+    public function webgis()
+    {
+        $suppliers = Supplier::all();
+        return view('webgis', compact('suppliers'));
+    }
 }
