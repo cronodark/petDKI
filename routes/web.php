@@ -10,9 +10,16 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\PolylineController;
+
 
 Route::get('/', [CompanyProfileController::class, 'index'])->name('company-profile.index');
 Route::get('/catalog', [CompanyProfileController::class, 'catalog'])->name('company-profile.catalog');
+
+Route::get('/webgis', function () {
+    return view('webgis');
+})->name('webgis');
 
 Route::get('/login', [AuthController::class, 'login'])->name("login")->middleware("guest");
 Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->middleware("guest");
@@ -78,3 +85,9 @@ Route::middleware("auth")->group(function () {
         });
     });
 });
+
+Route::get('/test', function (){
+    return view("layouts.store");
+})->name("test");
+
+Route::get('/api/suppliers', [SupplierController::class, 'getSuppliers']);
