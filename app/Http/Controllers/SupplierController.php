@@ -33,5 +33,3 @@ public function webgis()
     $suppliers = Supplier::all(); 
     return view('webgis', compact('suppliers')); 
 }
-
-}
