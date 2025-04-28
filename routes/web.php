@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\SupplierController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [CompanyProfileController::class, 'index'])->name('company-profile.index');
@@ -50,6 +52,7 @@ Route::middleware("auth")->group(function () {
 
     //route
     Route::middleware("role:warehouse")->group(function () {
+        Route::prefix('warehouse')->name('warehouse.')->group(function () {
         //product
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
@@ -60,12 +63,18 @@ Route::middleware("auth")->group(function () {
         //report
         Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
         //category
-        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-        Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
-        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-        Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+       // Categories
+    Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])
+        ->name('categories.delete');
+        //supply
+        Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+        Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
+        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
+        Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+        Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+        Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+        Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+        });
     });
 });
