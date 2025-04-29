@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductsExport;
 use App\Models\Product;
 use App\Models\Category;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -20,6 +22,21 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->paginate(5);;
         return view('dashboard.admin.stock', compact('products')); // ganti nama view dan kirim data products
+    }
+
+    public function exportPdf()
+    {
+        $products = Product::with('category')->get();
+
+        $pdf = Pdf::loadView('exports.products-pdf', compact('products'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('products.pdf');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new ProductsExport, 'products.xlsx');
     }
 
     /**
