@@ -30,6 +30,9 @@ Route::middleware("auth")->group(function () {
     Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
+    Route::get('/products/export/pdf', [ProductController::class, 'exportPdf'])->name('products.export.pdf');
+    Route::get('/products/export/excel', [ProductController::class, 'exportExcel'])->name('products.export.excel');
+
     //route
     Route::middleware("role:manager")->group(function () {
         Route::prefix('worker')->as('manager.worker.')->group(function () {
