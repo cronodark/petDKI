@@ -15,19 +15,72 @@
             outline: none;
         }
     </style>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Paytone+One&display=swap");
+
+        .font-paytone {
+            font-family: "Paytone One", -apple-system, Roboto, Helvetica, sans-serif;
+        }
+
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            transform: translateX(5px);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(55, 73, 106, 0.2);
+        }
+
+        .table-row {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .table-row:hover {
+            background-color: rgba(241, 245, 249, 0.5);
+        }
+
+        .btn-hover {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
 @endsection
 
 @section('content')
-    <section class="flex-1 p-10 max-md:p-5">
+    <section class="flex-1 p-5 max-md:p-5">
         <!-- Title & Actions -->
+        @include('partials.flash-messages')
         <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
             <h1 class="text-4xl font-bold text-blue-950">Supplier</h1>
             <div class="flex gap-4">
-                <button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100">
-                    <i class="ti ti-filter text-xl text-slate-600"></i>
-                    <span class="text-slate-600 font-semibold">Filter</span>
+                <button id="filterButton" type="button"
+                    class="btn-hover bg-slate-100 px-4 py-4 rounded-xl flex items-center gap-2 text-slate-600"
+                    onclick="toggleFilterDropdown()">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5fceb2b38570db72ffd3900e2dcc53fdd3b9d6da59bad07f63c84cc6caa5a517"
+                        class="w-5" />
+                    <span>Filter</span>
+                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
                 </button>
-                <a href="{{ route('warehouse.suppliers.create') }}" class="button flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-600 text-white">
+                <a href="{{ route('warehouse.suppliers.create') }}"
+                    class="button flex items-center gap-2 px-4 py-4 rounded-xl bg-slate-600 text-white">
                     <i class="ti ti-plus text-xl"></i>
                     <span class="font-semibold">Tambah Supplier</span>
                 </a>
@@ -53,10 +106,10 @@
                         <div class="flex justify-center gap-2 mt-3 mb-3">
                             <a href="{{ route('warehouse.suppliers.edit', $supplier->id) }}" class="button"><span
                                     class="border-3 py-3 px-7 border-[#37496A] rounded-md">Edit</span></a>
-                            <form action="{{ route('warehouse.suppliers.destroy', $supplier->id) }}" method="POST" >
+                            <form action="{{ route('warehouse.suppliers.destroy', $supplier->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="button cursor-pointer">
+                                <button type="button" class="button cursor-pointer delete-button" data-id="{{ $supplier->name }}">
                                     <span class="border-3 py-3 px-7 bg-[#FF0000] text-[#FFFFFF] rounded-md">Delete</span>
                                 </button>
                             </form>
@@ -113,9 +166,25 @@
             </nav>
         @endif
     </section>
+    @include('partials.confirmation')
 @endsection
 
 @section('script')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-button').on('click', function() {
+                const Id = $(this).data('id');
+                showConfirmationModal(
+                    'Hapus Supplier',
+                    `Apakah kamu yakin akan menghapus supplier: ${Id}?`,
+                    () => {
+                        $(this).closest('form').submit();
+                    }
+                );
+            });
+        });
+    </script>
     <script>
         tailwind.config = {
             theme: {

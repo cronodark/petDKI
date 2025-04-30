@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionsExport;
 use App\Models\Product;
 use App\Models\StockAdjustments;
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
 {
@@ -74,5 +77,22 @@ class TransactionController extends Controller
             DB::rollback();
             return back()->with('error', 'Transaksi gagal disimpan');
         }
+    }
+
+    public function exportPdf()
+    {
+        if (Auth::user()->role == 'manager') {
+            $transactions = Transaction::with('user')->get();
+        } else {
+            $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        }
+
+        $pdf = Pdf::loadView('exports.transactions-pdf', compact('transactions'));
+        return $pdf->download('transactions.pdf');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new TransactionsExport, 'transactions.xlsx');
     }
 }

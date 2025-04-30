@@ -190,7 +190,7 @@
                                         <path
                                             d="M21 0.666748L42 12.3333V35.6667L21 47.3333L0 35.6667V12.3333L21 0.666748ZM37.3333 16.825L23.3333 24.9077V40.6483L37.3333 32.5943V16.825ZM4.6667 16.9557V32.597L18.6667 40.6483V25.0383L4.6667 16.9557ZM12.2267 10.882L7.847 13.402L20.888 20.9317L25.2607 18.407L12.2267 10.882ZM21 5.838L16.9027 8.19405L29.9273 15.712L34.0387 13.339L21 5.838Z" />
                                     </svg>
-                                    <span class="grow shrink self-center">Products</span>
+                                    <span class="grow shrink self-center">Produk</span>
                                 </a>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                                             <path
                                                 d="M23 0.75C10.3 0.75 0.75 10.3 0.75 23C0.75 35.7 10.3 45.25 23 45.25C35.7 45.25 45.25 35.7 45.25 23C45.25 10.3 35.7 0.75 23 0.75ZM23 41C12.5 41 5 33.5 5 23C5 12.5 12.5 5 23 5C33.5 5 41 12.5 41 23C41 33.5 33.5 41 23 41Z" />
                                         </svg>
-                                        <span class="grow shrink self-center">Transactions</span>
+                                        <span class="grow shrink self-center">Transaksi</span>
                                     </a>
                                 </div>
                                 <div class="nav-item w-full mt-2">
@@ -235,7 +235,7 @@
                                             <path
                                                 d="M23 23.9584C21.2208 23.9584 19.5145 24.6651 18.2565 25.9232C16.9984 27.1813 16.2917 28.8876 16.2917 30.6667C16.2917 32.4458 16.9984 34.1521 18.2565 35.4102C19.5145 36.6683 21.2208 37.375 23 37.375C24.7792 37.375 26.4855 36.6683 27.7435 35.4102C29.0016 34.1521 29.7083 32.4458 29.7083 30.6667C29.7083 28.8876 29.0016 27.1813 27.7435 25.9232C26.4855 24.6651 24.7792 23.9584 23 23.9584Z" />
                                         </svg>
-                                        <span class="grow shrink self-center">Transactions</span>
+                                        <span class="grow shrink self-center">Transaksi</span>
                                     </a>
                                 </div>
                                 <div class="nav-item w-full mt-2">
@@ -244,7 +244,7 @@
                                         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/abe59c4fd7158d3e8eae339b598959764d8f2b53672165cbcd6211b7211963b5?placeholderIfAbsent=true&apiKey=bb7eb43fa3b041eb9b0e12445d776380"
                                             class="object-contain aspect-square h-6 w-6 icon-hover"
                                             alt="Employee icon" />
-                                        <span class="grow shrink self-center">Employees</span>
+                                        <span class="grow shrink self-center">Karyawan</span>
                                     </a>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@
                                             <path
                                                 d="M9.75 5.25V0.75H41.25V5.25H9.75ZM9.75 14.25V9.75H41.25V14.25H9.75ZM9.75 23.25V18.75H41.25V23.25H9.75ZM3 5.25C2.3625 5.25 1.75 4.6375 1.75 4C1.75 3.3625 2.3625 2.75 3 2.75H7.25C7.8875 2.75 8.5 3.3625 8.5 4C8.5 4.6375 7.8875 5.25 7.25 5.25H3Z" />
                                         </svg>
-                                        <span class="grow shrink self-center">Categories</span>
+                                        <span class="grow shrink self-center">Kategori</span>
                                     </a>
                                 </div>
                                 <div class="nav-item w-full mt-2">
@@ -272,7 +272,7 @@
                                             <path
                                                 d="M6.5 27.125V25.75H3.75V27.125C3.75 29.6777 5.8223 31.75 8.375 31.75H31.625C34.1777 31.75 36.25 29.6777 36.25 27.125V12.875C36.25 10.3223 34.1777 8.25 31.625 8.25H8.375C5.8223 8.25 3.75 10.3223 3.75 12.875V14.25H6.5V12.875C6.5 11.6973 7.4473 10.75 8.625 10.75H31.375C32.5527 10.75 33.5 11.6973 33.5 12.875V27.125C33.5 28.3027 32.5527 29.25 31.375 29.25H8.625C7.4473 29.25 6.5 28.3027 6.5 27.125Z" />
                                         </svg>
-                                        <span class="grow shrink self-center">Suppliers</span>
+                                        <span class="grow shrink self-center">Supplier</span>
                                     </a>
                                 </div>
                             </div>

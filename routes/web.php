@@ -30,6 +30,8 @@ Route::middleware("auth")->group(function () {
     Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
+    Route::get('/transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('transactions.export.pdf');
+    Route::get('/transactions/export/excel', [TransactionController::class, 'exportExcel'])->name('transactions.export.excel');
     Route::get('/products/export/pdf', [ProductController::class, 'exportPdf'])->name('products.export.pdf');
     Route::get('/products/export/excel', [ProductController::class, 'exportExcel'])->name('products.export.excel');
 

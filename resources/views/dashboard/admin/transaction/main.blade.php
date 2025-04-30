@@ -182,126 +182,44 @@
             }
         }
     </style>
+    @livewireStyles
 @endsection
 
 @section('content')
-    <!-- Transaction Section Header -->
-    <section
-        class="flex flex-wrap gap-5 justify-between mt-5 w-full font-bold whitespace-nowrap max-md:mt-10 max-md:mr-2.5 max-md:max-w-full fade-in"
-        style="animation-delay: 0.4s">
-        <h2 class="my-auto text-4xl text-blue-950">Transaction</h2>
-
-        <!-- Action Buttons -->
-        <div class="flex gap-8 text-xl text-slate-600">
-            <!-- Filter Button -->
-            <button class="flex gap-5 items-start px-8 py-5 rounded-2xl bg-slate-100 max-md:px-5 btn-hover"
-                aria-label="Filter transactions" id="filter-button">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/79b06fa2143a2bb4e5e38ba8c04f684cc5405367?placeholderIfAbsent=true&apiKey=b6e760062608466c9c09a9a54edb9b26"
-                    alt="" class="object-contain shrink-0 aspect-[0.87] w-[27px]" aria-hidden="true" />
-                <span>Filter</span>
-            </button>
-
-            <!-- Export Button -->
-            <button class="flex gap-2.5 px-6 py-4 rounded-2xl bg-slate-100 max-md:px-5 btn-hover"
-                aria-label="Export transactions" id="export-button">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b673e6e08da8f4cb0c541921eb49dd3c2f10d48d?placeholderIfAbsent=true&apiKey=b6e760062608466c9c09a9a54edb9b26"
-                    alt="" class="object-contain shrink-0 aspect-square w-[43px]" aria-hidden="true" />
-                <span class="my-auto">Export</span>
-            </button>
-        </div>
-    </section>
-
-    <!-- Transaction Table -->
-    <section
-        class="flex flex-col pb-7 mt-3 w-full text-xl font-medium rounded-2xl bg-slate-100 text-slate-600 max-md:max-w-full relative"
-        aria-label="Transaction list" id="transaction-table">
-        <!-- Loading Overlay -->
-        <div class="loading-overlay" id="table-loading">
-            <div class="spinner"></div>
-            <p class="sr-only">Loading transactions...</p>
-        </div>
-
-        <!-- Table Header -->
-        <div class="grid grid-cols-4 gap-4 px-10 py-6 text-center text-amber-200 bg-slate-600 rounded-t-2xl max-md:px-4">
-            <div>ID</div>
-            <div>Tanggal</div>
-            <div>Nama Kasir</div>
-            <div>Aksi</div>
-        </div>
-
-
-        <!-- Table Rows -->
-        <div id="table-rows" class="divide-y divide-slate-300">
-            @if ($transactions->isEmpty())
-                <div class="flex items-center justify-center h-32">
-                    <p class="text-slate-500">Tidak ada transaksi.</p>
-                </div>
-            @else
-                @foreach ($transactions as $transaction)
-                    <div class="grid grid-cols-4 gap-4 items-center px-10 py-5 text-center max-md:px-4">
-                        <div>{{ $transaction->id }}</div>
-                        <div>{{ $transaction->transaction_date }}</div>
-                        <div>{{ $transaction->user->name }}</div>
-                        <a href="{{ route('transactions.show', $transaction->id) }}"
-                            class="px-5 py-2 rounded-xl border-2 border-slate-600 btn-hover inline-block">
-                            Detail
-                        </a>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-    </section>
-
-
-    <!-- Pagination -->
-    <!-- Pagination Custom -->
-    @if ($transactions->hasPages())
-        <nav class="flex justify-between items-center mt-9 mx-7 text-xl font-medium text-slate-600" aria-label="Pagination">
-            <!-- Previous Button -->
-            @if ($transactions->onFirstPage())
-                <span class="flex gap-3 opacity-50 cursor-not-allowed">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                        alt="" class="w-3" />
-                    <span>Previous</span>
-                </span>
-            @else
-                <a href="{{ $transactions->previousPageUrl() }}" class="flex gap-3 btn-hover">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                        alt="" class="w-3" />
-                    <span>Previous</span>
-                </a>
-            @endif
-
-            <!-- Page Numbers -->
-            <div class="flex gap-5">
-                @foreach ($transactions->getUrlRange(1, $transactions->lastPage()) as $page => $url)
-                    @if ($page == $transactions->currentPage())
-                        <span class="px-3 py-1 text-white rounded-md bg-slate-600">{{ $page }}</span>
-                    @else
-                        <a href="{{ $url }}" class="px-3 py-1 rounded-md hover:bg-gray-300">{{ $page }}</a>
-                    @endif
-                @endforeach
-            </div>
-
-            <!-- Next Button -->
-            @if ($transactions->hasMorePages())
-                <a href="{{ $transactions->nextPageUrl() }}" class="flex gap-3 btn-hover">
-                    <span>Next</span>
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
-                        alt="" class="w-3" />
-                </a>
-            @else
-                <span class="flex gap-3 opacity-50 cursor-not-allowed">
-                    <span>Next</span>
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
-                        alt="" class="w-3" />
-                </span>
-            @endif
-        </nav>
-    @endif
+    @livewire('transacsion-list')
 @endsection
 
 @section('script')
+    @livewireScripts
+    <script>
+        function toggleExportDropdown() {
+            const dropdown = document.getElementById('exportDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Optional: Tutup dropdown jika klik di luar
+        window.addEventListener('click', function(e) {
+            const exportButton = document.getElementById('exportButton');
+            const exportDropdown = document.getElementById('exportDropdown');
+            if (!exportButton.contains(e.target)) {
+                exportDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    <script>
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', function(e) {
+            const filterButton = document.getElementById('filterButton');
+            const filterDropdown = document.getElementById('filterDropdown');
+            if (!filterButton.contains(e.target)) {
+                filterDropdown.classList.add('hidden');
+            }
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Elements

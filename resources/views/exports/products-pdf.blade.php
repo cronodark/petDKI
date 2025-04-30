@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <h2>List Products</h2>
+    <h2>Daftar Produk</h2>
     <table>
         <thead>
             <tr>

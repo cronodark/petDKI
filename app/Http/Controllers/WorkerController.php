@@ -70,7 +70,7 @@ class WorkerController extends Controller
     public function update(Request $request, $id)
     {
         $worker = User::findOrFail($id);
-        $worker->update($request->except('photo'));
+        $worker->update($request->except('photo', 'password'));
         if ($request->hasFile('photo')) {
             if ($worker->photo != null) {
                 Storage::delete('public/' . $worker->photo);
