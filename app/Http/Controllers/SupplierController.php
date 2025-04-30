@@ -45,14 +45,13 @@ class SupplierController extends Controller
             'latitude' => 'required',
             'longitude' => 'required',
             'phone' => 'required',
+            'description' => 'required',
+            'photo_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'category' => 'required|in:Toko Utama,Toko Cabang,Partner',
         ]);
 
-        Supplier::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'phone' => $request->phone,
+        Supplier::create($request->except('photo_url') + [
+            'photo_url' => $request->file('photo_url')->store('supplier', 'public'),
         ]);
 
         return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier berhasil ditambahkan.');
@@ -80,16 +79,18 @@ class SupplierController extends Controller
             'latitude' => 'required',
             'longitude' => 'required',
             'phone' => 'required',
+            'description' => 'required',
+            'photo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'category' => 'required|in:Toko Pusat,Toko Cabang,Partner',
         ]);
 
         $supplier = Supplier::findOrFail($id);
-        $supplier->update([
-            'name' => $request->name,
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'phone' => $request->phone,
-        ]);
+        $supplier->update($request->except('photo_url'));
+        if ($request->hasFile('photo_url')) {
+            $supplier->update([
+                'photo_url' => $request->file('photo_url')->store('supplier', 'public'),
+            ]);
+        }
 
         return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier berhasil diedit.');
     }
