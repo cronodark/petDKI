@@ -18,6 +18,9 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->string('phone');
+            $table->string('description')->nullable();
+            $table->string('photo_url')->nullable();
+            $table->string('category')->nullable();  //Toko Pusat, Toko Cabang, Partner
             $table->timestamps();
         });
     }
@@ -30,5 +33,5 @@ return new class extends Migration
         Schema::dropIfExists('suppliers');
     }
 
-    
+
 };

@@ -8,7 +8,7 @@ class Supplier extends Model
 {
     protected $table = 'suppliers';
 
-    protected $fillable = ['name', 'latitude', 'longitude', 'phone', 'address', 'category'];
+    protected $fillable = ['name', 'latitude', 'longitude', 'phone', 'address', 'category', 'description', 'photo_url'];
 
     protected $casts = [
         'geom' => 'array',

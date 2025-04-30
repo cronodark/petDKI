@@ -55,7 +55,7 @@ class SupplierController extends Controller
             'phone' => $request->phone,
         ]);
 
-        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier created successfully.');
+        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier berhasil ditambahkan.');
     }
 
     public function destroy($id)
@@ -63,7 +63,7 @@ class SupplierController extends Controller
         $supplier = Supplier::findOrFail($id);
         $supplier->delete();
 
-        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier deleted successfully.');
+        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier berhasil dihapus.');
     }
 
     public function edit($id)
@@ -91,7 +91,7 @@ class SupplierController extends Controller
             'phone' => $request->phone,
         ]);
 
-        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier updated successfully.');
+        return redirect()->route('warehouse.suppliers.index')->with('success', 'Supplier berhasil diedit.');
     }
 
     public function webgis()
