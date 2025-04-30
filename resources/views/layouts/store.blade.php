@@ -266,7 +266,7 @@
                                 </div>
                                 <div class="nav-item w-full mt-2">
                                     <a href="{{ route('warehouse.suppliers.index') }}"
-                                        class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.suppliers.index' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.suppliers.create' ? 'active' : '' }}">
+                                        class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.suppliers.index' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.suppliers.create' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.suppliers.edit' ? 'active' : '' }}">
                                         <svg width="24" height="24" viewBox="0 0 40 40" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="fill-current">
                                             <path
