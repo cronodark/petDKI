@@ -94,7 +94,7 @@
             @endforeach
             <div class="mt-6">
                 @if ($workers->hasPages())
-                    <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
+                    <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 pb-5 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
                         aria-label="Pagination" style="animation-delay: 0.6s">
 
                         <!-- Previous Page -->
