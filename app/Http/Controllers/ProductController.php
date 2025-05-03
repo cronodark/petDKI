@@ -21,22 +21,8 @@ class ProductController extends Controller
     public function index(): View
     {
         $products = Product::with('category')->paginate(5);;
-        return view('dashboard.admin.stock', compact('products')); // ganti nama view dan kirim data products
-    }
-
-    public function exportPdf()
-    {
-        $products = Product::with('category')->get();
-
-        $pdf = Pdf::loadView('exports.products-pdf', compact('products'))
-            ->setPaper('a4', 'landscape');
-
-        return $pdf->download('products.pdf');
-    }
-
-    public function exportExcel()
-    {
-        return Excel::download(new ProductsExport, 'products.xlsx');
+        $categories = Category::all(); 
+        return view('dashboard.warehouse.stock.main', compact('products')); // ganti nama view dan kirim data products
     }
 
     /**
@@ -45,13 +31,7 @@ class ProductController extends Controller
     public function create(): View
     {
         $categories = Category::all(); // ambil data kategori buat dropdown
-        return view('products.create', compact('categories'));
-    }
-
-    public function show($id): View
-    {
-        $product = Product::findOrFail($id);
-        return view('products.show', compact('product'));
+        return view('dashboard.warehouse.stock.add', compact('categories'));
     }
 
     /**
@@ -61,7 +41,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $categories = Category::all(); // ambil data kategori buat dropdown
-        return view('products.edit', compact('product', 'categories'));
+        return view('dashboard.warehouse.stock.edit', compact('product', 'categories'));
     }
 
     /**
@@ -95,10 +75,8 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-        return response()->json([
-            'success' => 'Produk berhasil dibuat',
-            'product' => $product
-        ]);
+        return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil ditambahkan');
     }
 
     /**
@@ -139,10 +117,8 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return response()->json([
-            'success' => 'Produk berhasil diupdate',
-            'product' => $product
-        ]);
+        return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil diperbarui');
     }
 
     /**
@@ -158,72 +134,25 @@ class ProductController extends Controller
         }
 
         $product->delete();
-
-        return response()->json(['success' => 'Produk berhasil dihapus']);
+        return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil dihapus');
     }
 
     /**
      * Generate laporan rekap PDF
      */
-    public function generatePdfRecap(Request $request)
+    public function exportPdf()
     {
-        $type = $request->input('type', 'monthly'); // monthly, weekly, daily
+        $products = Product::with('category')->get();
 
-        // ambil filter tanggal
-        $startDate = $request->input('start_date')
-            ? Carbon::parse($request->input('start_date'))->startOfDay()
-            : Carbon::now()->startOfMonth();
+        $pdf = Pdf::loadView('exports.products-pdf', compact('products'))
+            ->setPaper('a4', 'landscape');
 
-        $endDate = $request->input('end_date')
-            ? Carbon::parse($request->input('end_date'))->endOfDay()
-            : Carbon::now();
+        return $pdf->download('products.pdf');
+    }
 
-        // ambil produk yang dibuat dalam rentang tanggal
-        $query = Product::whereBetween('created_at', [$startDate, $endDate])
-            ->with('category');
-
-        // grup berdasarkan periode waktu sesuai tipe
-        if ($type == 'monthly') {
-            $products = $query->get()->groupBy(function($item) {
-                return Carbon::parse($item->created_at)->format('Y-m');
-            });
-            $title = 'Rekap Produk Bulanan';
-        } elseif ($type == 'weekly') {
-            $products = $query->get()->groupBy(function($item) {
-                return Carbon::parse($item->created_at)->format('o-W');
-            });
-            $title = 'Rekap Produk Mingguan';
-        } else {
-            $products = $query->get()->groupBy(function($item) {
-                return Carbon::parse($item->created_at)->format('Y-m-d');
-            });
-            $title = 'Rekap Produk Harian';
-        }
-
-        // proses data buat laporan
-        $reportData = [];
-        foreach ($products as $period => $items) {
-            $totalValue = $items->sum(function($item) {
-                return $item->price * $item->stock;
-            });
-
-            $reportData[] = [
-                'period' => $period,
-                'total_products' => $items->count(),
-                'total_stock' => $items->sum('stock'),
-                'total_value' => $totalValue,
-                'products' => $items
-            ];
-        }
-
-        // generate PDF
-        $pdf = PDF::loadView('products.recap_pdf', [
-            'data' => $reportData,
-            'title' => $title,
-            'type' => $type,
-            'generated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ]);
-
-        return $pdf->download('rekap_produk_' . $type . '_' . now()->format('YmdHis') . '.pdf');
+    public function exportExcel()
+    {
+        return Excel::download(new ProductsExport, 'products.xlsx');
     }
 }
