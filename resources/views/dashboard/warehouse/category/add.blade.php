@@ -26,6 +26,8 @@
                 class="w-full px-4 py-3 text-lg border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
+            
+
             @error('category_name')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
             @enderror

@@ -1,9 +1,9 @@
 <div>
     <!-- Transaction Section Header -->
     <section
-        class="flex flex-wrap gap-5 justify-between mt-5 w-full font-bold whitespace-nowrap max-md:mt-10 max-md:mr-2.5 max-md:max-w-full fade-in"
+        class="flex flex-wrap gap-5 justify-between w-full font-bold whitespace-nowrap max-md:mt-10 max-md:mr-2.5 max-md:max-w-full fade-in"
         style="animation-delay: 0.4s">
-        <h2 class="my-auto text-4xl text-blue-950">Transaction</h2>
+        <h2 class="my-auto text-4xl text-blue-950 mb-5">Transaction</h2>
 
         <!-- Action Buttons -->
         <div class="flex gap-8 text-xl text-slate-600">
@@ -13,7 +13,7 @@
                     onclick="toggleFilterDropdown()">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5fceb2b38570db72ffd3900e2dcc53fdd3b9d6da59bad07f63c84cc6caa5a517"
                         class="w-5" />
-                    <span>Filter</span>
+                    <span>Sortir</span>
                     <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

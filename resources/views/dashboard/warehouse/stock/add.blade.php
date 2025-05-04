@@ -6,10 +6,10 @@
     <div class="flex flex-col items-start mt-2 w-full max-md:mt-10 max-md:max-w-full">
         <!-- Add Product Form -->
         <h1 class="mt-5 text-4xl font-bold text-blue-950 max-md:mt-10">Tambah Produk</h1>
-        
+
         <form action="{{ route('warehouse.products.store') }}" method="POST" enctype="multipart/form-data" class="mt-10 w-full max-w-3xl">
             @csrf
-            
+
             <!-- Product Name -->
             <div class="mb-6">
                 <label for="product_name" class="block text-xl font-medium text-zinc-400 mb-3">
@@ -28,7 +28,7 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <!-- SKU -->
             <div class="mb-6">
                 <label for="sku" class="block text-xl font-medium text-zinc-400 mb-3">
@@ -47,7 +47,7 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <!-- Price and Stock (2-column layout) -->
             <div class="flex flex-col md:flex-row gap-4 mb-6">
                 <div class="flex-1">
@@ -67,7 +67,7 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                
+
                 <div class="flex-1">
                     <label for="stock" class="block text-xl font-medium text-zinc-400 mb-3">
                         Stok
@@ -86,7 +86,7 @@
                     @enderror
                 </div>
             </div>
-            
+
             <!-- Category -->
             <div class="mb-6">
                 <label for="category_id" class="block text-xl font-medium text-zinc-400 mb-3">
@@ -101,7 +101,7 @@
                     <option value="" disabled selected>Pilih kategori</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
+                            {{ $category->category_name }}
                         </option>
                     @endforeach
                 </select>
@@ -109,7 +109,7 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <!-- Description -->
             <div class="mb-6">
                 <label for="description" class="block text-xl font-medium text-zinc-400 mb-3">
@@ -126,7 +126,7 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <!-- Product Photo -->
             <div class="mb-6">
                 <label for="photo" class="block text-xl font-medium text-zinc-400 mb-3">
@@ -152,7 +152,7 @@
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <!-- Submit Button -->
             <button
                 type="submit"

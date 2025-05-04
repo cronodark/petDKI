@@ -369,7 +369,7 @@
                     class="object-contain shrink-0 aspect-[0.87] w-[27px]"
                     aria-hidden="true"
                   />
-                  <span>Filter</span>
+                  <span>Sortir</span>
                 </button>
 
                 <!-- Export Button -->

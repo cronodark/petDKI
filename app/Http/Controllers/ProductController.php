@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Exports\ProductsExport;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\StockAdjustments;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -21,7 +23,7 @@ class ProductController extends Controller
     public function index(): View
     {
         $products = Product::with('category')->paginate(5);;
-        $categories = Category::all(); 
+        $categories = Category::all();
         return view('dashboard.warehouse.stock.main', compact('products')); // ganti nama view dan kirim data products
     }
 
@@ -57,6 +59,7 @@ class ProductController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
+
         ]);
 
         if ($validator->fails()) {
@@ -74,6 +77,14 @@ class ProductController extends Controller
         }
 
         $product = Product::create($validated);
+
+        StockAdjustments::create([
+            'product_id' => $product->id,
+            'quantity' => $product->stock,
+            'adjustment_type' => 'in',
+            'reason' => 'Produk baru ditambahkan',
+            'user_id' => Auth::user()->id,
+        ]);
 
         return redirect()->route('products.index')
         ->with('success', 'Produk berhasil ditambahkan');
@@ -134,8 +145,7 @@ class ProductController extends Controller
         }
 
         $product->delete();
-        return redirect()->route('products.index')
-        ->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus');
     }
 
     /**
