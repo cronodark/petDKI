@@ -146,7 +146,7 @@
 
     <section id="maps" class="h-screen py-15">
         <!-- Maps -->
-        <div class="shadow-xl mx-15 mt-20 rounded-xl bg-[#FEF8E3] style="box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+        <div class="shadow-xl mx-15 mt-20 rounded-xl bg-[#FEF8E3]" style="box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
             <div class="grid grid-cols-1 lg:grid-cols-[60%_40%]">
 
                 <div class="Offline p-10 flex flex-col">
@@ -185,7 +185,7 @@
     </section>
 
     <!-- tentang Kami -->
-    <section id="about" class="h-screen py-15">
+    <section id="about" class="h-screen py-15 w-full">
         <div class="mt-15 ms-15">
             <h1 class="text-left text-[#37496A] font-extrabold text-5xl">Tentang</h1>
             <h1 class="text-left text-[#37496A] font-extrabold text-5xl">Kami</h1>

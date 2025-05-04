@@ -10,7 +10,7 @@
             <form method="POST" action="{{ route('warehouse.products.update', $product->id) }}" class="w-full" enctype="multipart/form-data">
                 @csrf
                 @method('PATCH')
-                
+
                 <!-- Product Name Field -->
                 <label for="product-name" class="mt-20 text-xl font-medium text-zinc-400 block max-md:mt-10">
                     Nama Produk
@@ -21,7 +21,7 @@
                 @error('product_name')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                
+
                 <!-- SKU Field -->
                 <label for="sku" class="mt-10 text-xl font-medium text-zinc-400 block">
                     SKU
@@ -32,7 +32,7 @@
                 @error('sku')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                
+
                 <!-- Price and Stock Fields (side by side) -->
                 <div class="flex flex-wrap gap-10 mt-10 w-full max-w-[914px]">
                     <!-- Price Field -->
@@ -47,7 +47,7 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <!-- Stock Field -->
                     <div class="flex-1">
                         <label for="stock" class="text-xl font-medium text-zinc-400 block">
@@ -61,7 +61,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <!-- Category Field with Dropdown -->
                 <label for="category_id" class="mt-10 text-xl font-medium text-zinc-400 block">
                     Kategori
@@ -78,7 +78,7 @@
                 @error('category_id')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                
+
                 <!-- Description Field -->
                 <label for="description" class="mt-10 text-xl font-medium text-zinc-400 block">
                     Deskripsi
@@ -88,31 +88,31 @@
                 @error('description')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                
+
                 <!-- Project Photo Upload -->
                 <label for="product_photo" class="mt-10 text-xl font-medium text-zinc-400 block">
                     Foto Produk
                 </label>
                 <div class="flex flex-col mt-3">
-                    @if($product->photo_path)
+                    @if($product->photo)
                         <div class="mb-4">
-                            <img src="{{ asset('storage/' . $product->photo_path) }}" alt="{{ $product->product_name }}" class="w-32 h-32 object-cover rounded-lg">
+                            <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->product_name }}" class="w-32 h-32 object-cover rounded-lg">
                             <p class="text-sm text-gray-500 mt-1">Foto saat ini</p>
                         </div>
                     @endif
                     <div class="flex gap-3 text-xl text-zinc-400">
-                        <label for="product_photo"
+                        <label for="photo"
                             class="px-6 py-3 border border-gray-400 rounded-lg cursor-pointer hover:bg-slate-100 focus-within:ring-2 focus-within:ring-blue-500 transition-colors">
                             Pilih file
-                            <input type="file" id="product_photo" name="product_photo" class="hidden" accept="image/*">
+                            <input type="file" id="photo" name="photo" class="hidden" accept="image/*">
                         </label>
                         <span class="my-auto" id="file-name">Tidak ada file dipilih</span>
                     </div>
                 </div>
-                @error('product_photo')
+                @error('photo')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                
+
                 <!-- Submit Button -->
                 <button type="submit"
                     class="px-8 py-3 mt-8 text-xl font-bold text-white rounded-2xl bg-slate-600 hover:bg-slate-700 transition-colors">
@@ -124,7 +124,7 @@
 
     <script>
         // File upload handling
-        document.getElementById("product_photo").addEventListener("change", function(e) {
+        document.getElementById("photo").addEventListener("change", function(e) {
             const fileName = e.target.files[0] ? e.target.files[0].name : "Tidak ada file dipilih";
             document.getElementById("file-name").textContent = fileName;
         });
