@@ -18,37 +18,37 @@ class DashboardController extends Controller
     {
         // Get the current user's role
         $userRole = Auth::user()->role;
-        
+
         // Initialize all possible variables with default values to avoid undefined variable errors
         $data = $this->initializeDefaultData();
-        
+
         // Total overall stock - common for all roles
         $data['totalStock'] = Product::sum('stock');
-        
+
         // Role-specific data
         switch ($userRole) {
             case 'warehouse':
                 $this->getWarehouseData($data);
                 break;
-                
+
             case 'manager':
                 $this->getManagerData($data);
                 break;
-                
+
             case 'cashier':
                 $this->getCashierData($data);
                 break;
-                
+
             default:
                 // Default to full access if role not specified
                 $this->getWarehouseData($data);
                 $this->getManagerData($data);
                 $this->getCashierData($data);
         }
-        
+
         return view('dashboard', $data);
     }
-    
+
     private function initializeDefaultData()
     {
         // Initialize all possible variables with default values
@@ -58,6 +58,8 @@ class DashboardController extends Controller
             'totalCategories' => 0,
             'totalEmployees' => 0,
             'totalIncome' => 0,
+            'stockInData' => collect(),
+            'stockOutData' => collect(),
             'totalOutcome' => 0,
             'recentTransactions' => collect(),
             'recentStockAdjustments' => collect(),
@@ -69,39 +71,62 @@ class DashboardController extends Controller
             'dailySales' => collect(),
         ];
     }
-    
+
     private function getWarehouseData(&$data)
     {
         // Total categories
         $data['totalCategories'] = Category::count();
-        
+
         // Recent stock adjustments (in and out - last 5)
         $data['recentStockAdjustments'] = StockAdjustments::with(['product', 'user'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
-            
+
         // Low stock products (stock less than 10)
         $data['lowStockProducts'] = Product::where('stock', '<', 10)
             ->with('category')
             ->orderBy('stock', 'asc')
             ->limit(5)
             ->get();
-            
-        // Monthly stock movement 
+
+        // Monthly stock movement
         $data['stockMovement'] = DB::table('stock_adjustments')
-        ->select(
-            DB::raw('SUM(CASE WHEN adjustment_type = "increase" THEN quantity ELSE 0 END) as total_in'),
-            DB::raw('SUM(CASE WHEN adjustment_type = "decrease" THEN quantity ELSE 0 END) as total_out')
-        )
-        ->where('created_at', '>=', Carbon::now()->subDays(30)) // using 30 days as in the UI
-        ->first();
+            ->select(
+                DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE 0 END) as total_in'),
+                DB::raw('SUM(CASE WHEN adjustment_type = "out" THEN quantity ELSE 0 END) as total_out')
+            )
+            ->where('created_at', '>=', Carbon::now()->subDays(30)) // using 30 days as in the UI
+            ->first();
+
+        $data['stockAdjustment'] = StockAdjustments::all()->groupBy(function ($stockAdjustment) {
+            return Carbon::parse($stockAdjustment->created_at)->format('Y-m-d');
+        });
+
+        $stockAdjustment = StockAdjustments::all();
+
+        // Grouping stock adjustment by date (created_at) and filtering by adjustment type
+        $data['stockInData'] = $stockAdjustment->where('adjustment_type', 'in')
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('Y-m-d'); // Group by date
+            })
+            ->map(function ($items) {
+                return $items->sum('quantity'); // Sum the quantity for each day
+            });
+
+        $data['stockOutData'] = $stockAdjustment->where('adjustment_type', 'out')
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('Y-m-d');
+            })
+            ->map(function ($items) {
+                return $items->sum('quantity');
+            });
 
         // Stock history over time (last 6 months)
         $data['stockHistory'] = DB::table('stock_adjustments')
             ->select(
                 DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-                DB::raw('SUM(CASE WHEN adjustment_type = "increase" THEN quantity ELSE -quantity END) as net_change')
+                DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE -quantity END) as net_change')
             )
             ->where('created_at', '>=', Carbon::now()->subMonths(6))
             ->groupBy('month')
@@ -112,37 +137,39 @@ class DashboardController extends Controller
                 $item->month_name = $monthDate->format('F Y');
                 return $item;
             });
-            
+
         $data['userRole'] = 'warehouse';
 
         return route('dashboard', $data);
     }
-    
+
     private function getManagerData(&$data)
     {
         // Total employees (users)
         $data['totalEmployees'] = User::count();
-        
+
         // Total income (sum of all transactions)
         $data['totalIncome'] = Transaction::sum('total_price');
-        
+
+        $data['totalTransactions'] = Transaction::count();
+
         // Total outcome (sum of stock adjustments that decrease inventory)
-        $data['totalOutcome'] = StockAdjustments::where('adjustment_type', 'decrease')
+        $data['totalOutcome'] = StockAdjustments::where('adjustment_type', 'out')
             ->join('products', 'products.id', '=', 'stock_adjustments.product_id')
             ->sum(DB::raw('products.price * stock_adjustments.quantity'));
-            
+
         // Recent transactions (last 5)
         $data['recentTransactions'] = Transaction::with(['user', 'transactionDetails.transaction'])
             ->orderBy('transaction_date', 'desc')
             ->limit(5)
             ->get();
-            
+
         // Recent stock adjustments for manager
         $data['recentStockAdjustments'] = StockAdjustments::with(['product', 'user'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
-            
+
         // Monthly sales for chart (last 6 months)
         $data['monthlySales'] = DB::table('transactions')
             ->select(
@@ -158,7 +185,7 @@ class DashboardController extends Controller
                 $item->month_name = $monthDate->format('F Y');
                 return $item;
             });
-            
+
         // Sales by category for chart
         $data['salesByCategory'] = DB::table('transaction_details')
             ->join('products', 'products.id', '=', 'transaction_details.product_id')
@@ -166,23 +193,23 @@ class DashboardController extends Controller
             ->select('categories.category_name', DB::raw('SUM(transaction_details.quantity) as total_sold'))
             ->groupBy('categories.category_name')
             ->get();
-            
+
         $data['userRole'] = 'manager';
 
         return view('dashboard', $data);
     }
-    
+
     private function getCashierData(&$data)
     {
         // Total income (sum of all transactions)
         $data['totalIncome'] = Transaction::sum('total_price');
-        
+
         // Recent transactions (last 5)
         $data['recentTransactions'] = Transaction::with(['user', 'transactionDetails.transaction'])
             ->orderBy('transaction_date', 'desc')
             ->limit(5)
             ->get();
-            
+
         // Monthly sales for chart (last 6 months)
         $data['monthlySales'] = DB::table('transactions')
             ->select(
@@ -198,7 +225,7 @@ class DashboardController extends Controller
                 $item->month_name = $monthDate->format('F Y');
                 return $item;
             });
-            
+
         // Daily sales for the last 7 days
         $data['dailySales'] = DB::table('transactions')
             ->select(
@@ -214,7 +241,7 @@ class DashboardController extends Controller
                 $item->day_name = $dayDate->format('D, M d');
                 return $item;
             });
-            
+
         // Sales by category (for cashier)
         $data['salesByCategory'] = DB::table('transaction_details')
             ->join('products', 'products.id', '=', 'transaction_details.product_id')
@@ -222,7 +249,7 @@ class DashboardController extends Controller
             ->select('categories.category_name', DB::raw('SUM(transaction_details.quantity) as total_sold'))
             ->groupBy('categories.category_name')
             ->get();
-            
+
         $data['userRole'] = 'cashier';
     }
 }
