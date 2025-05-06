@@ -8,6 +8,7 @@ use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\StockAdjustController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PolylineController;
@@ -69,11 +70,18 @@ Route::middleware("auth")->group(function () {
             Route::post('/products', [ProductController::class, 'store'])->name('products.store');
             Route::patch('/products/{id}', [ProductController::class, 'update'])->name('products.update');
             Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
             // Categories
             Route::resource('categories', CategoryController::class)->except(['show']);
             Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])
                 ->name('categories.delete');
+            //stockadjust
+            Route::get('/stockadjust', [StockAdjustController::class, 'index'])->name('stockadj.index');
+            Route::get('/stockadjust/create', [StockAdjustController::class, 'create'])->name('stockadj.create');
+            ROute::get('/stockadjust/{id}/edit', [StockAdjustController::class, 'edit'])->name('stockadj.edit');
+            Route::post('/stockadjust', [StockAdjustController::class, 'store'])->name('stockadj.store');
+            Route::put('/stockadjust/{id}', [StockAdjustController::class, 'update'])->name('stockadj.update');
+            Route::delete('/stockadjust/{id}', [StockAdjustController::class, 'destroy'])->name('stockadj.destroy');
+
             //supply
             Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
             Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
