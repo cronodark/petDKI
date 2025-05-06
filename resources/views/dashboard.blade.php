@@ -53,16 +53,16 @@
                         <!-- Low Stock Items -->
                         <div class="flex flex-col overflow-hidden rounded-2xl bg-slate-600 text-white min-w-[480px]">
                             <div class="px-8 py-6 border-b border-slate-500">
-                                <h3 class="text-xl font-bold text-amber-200">Low Stock Items</h3>
+                                <h3 class="text-2xl font-bold text-amber-200">Produk dengan Stok Rendah</h3>
                             </div>
                             <div class="px-8 py-6">
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-sm">
                                         <thead>
                                             <tr class="text-left border-b border-slate-500">
-                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Product</th>
-                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Category</th>
-                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Current Stock</th>
+                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Produk</th>
+                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Kategori</th>
+                                                <th class="pb-3 pr-4 font-semibold text-gray-300">Stok Saat Ini</th>
                                                 <th class="pb-3 font-semibold text-gray-300">SKU</th>
                                             </tr>
                                         </thead>
@@ -165,11 +165,11 @@
                         <div class="flex overflow-hidden flex-col px-8 py-10 rounded-2xl bg-slate-600 text-white h-full">
                             @if ($userRole == 'warehouse')
                                 <div class="flex justify-between items-center mb-4">
-                                    <strong class="text-4xl font-bold tracking-tighter leading-none text-amber-200">
-                                        {{ number_format($totalStock) }}
+                                    <strong class="text-2xl font-bold tracking-tighter leading-none text-amber-200">
+                                    Total Stok Terkini = {{ number_format($totalStock) }}
                                     </strong>
                                     <div class="flex space-x-2">
-                                        <input type="week" id="weekSelector" class="rounded text-gray-800 px-2 py-1 text-sm" 
+                                        <input type="week" id="weekSelector" class="bg-white text-slate-800 rounded px-2 py-1 text-sm" 
                                             value="{{ now()->format('Y-\WW') }}">
                                         <button id="refreshChart" class="bg-amber-200 text-slate-800 px-3 py-1 rounded text-sm">
                                             Perbarui

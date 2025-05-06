@@ -64,7 +64,7 @@ class DashboardController extends Controller
             'lowStockProducts' => collect(),
             'monthlySales' => collect(),
             'salesByCategory' => collect(),
-            'stockMovementByCategory' => collect(),
+            'stockMovement' => collect(),
             'stockHistory' => collect(),
             'dailySales' => collect(),
         ];
