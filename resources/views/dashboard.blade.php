@@ -30,7 +30,7 @@
                 </div>
 
                 <!-- Summary Cards (Role-based) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                     <!-- Common for all: Total Stock -->
                     <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
                         <span
@@ -52,7 +52,7 @@
                         </div>
 
                         <!-- Low Stock Items -->
-                        <div class="flex flex-col overflow-hidden rounded-2xl bg-slate-600 text-white min-w-full">
+                        <div class="flex flex-col overflow-hidden rounded-2xl bg-slate-600 text-white min-w-full col-span-2">
                             <div class="px-8 py-6 border-b border-slate-500">
                                 <h3 class="text-2xl font-bold text-amber-200">Produk dengan Stok Rendah</h3>
                             </div>
@@ -107,14 +107,14 @@
                             </div>
                         </div>
 
-                        {{-- <!-- Total Expenses -->
+                        <!-- Total Expenses -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
                             <span class="text-4xl font-bold tracking-tighter text-amber-200">{{ $totalTransactions }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Transaksi </h3>
                             <div class="text-gray-300 text-lg mt-auto">
                                 <i class="fas fa-minus-circle"></i>
                             </div>
-                        </div> --}}
+                        </div>
                     @endif
 
                     @if ($userRole == 'cashier')
@@ -142,7 +142,7 @@
 
 
                         <!-- Yesterday's Sales -->
-                        {{-- <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
+                        <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
                             <span class="text-4xl font-bold tracking-tighter text-amber-200">
                                 Rp
                                 {{ number_format($dailySales->where('day', \Carbon\Carbon::yesterday()->format('Y-m-d'))->first()->total ?? 0, 0) }}
@@ -151,7 +151,7 @@
                             <div class="text-gray-300 text-lg mt-auto">
                                 <i class="fas fa-history"></i>
                             </div>
-                        </div> --}}
+                        </div>
                     @endif
                 </div>
 
