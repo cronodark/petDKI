@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col my-5 w-full text-xl rounded-2xl bg-slate-100 max-md:max-w-full overflow-auto">
+        <div class="flex flex-col my-5 w-full text-xl rounded-2xl max-md:max-w-full overflow-auto">
             <table class="min-w-[800px] w-full gap-2 border-collapse" id="sortable-product">
                 <thead>
                     <tr class="bg-slate-600 text-center text-[#FADE73]">
@@ -94,7 +94,7 @@
                         @endif
                     </tr>
                 </thead>
-                <tbody class="bg-white text-slate-600">
+                <tbody class="bg-[#F1F1F9] text-slate-600">
                     @foreach ($products as $product)
                         <tr class="border-b">
                             <td class="px-4 py-3">

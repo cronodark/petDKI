@@ -49,7 +49,7 @@
         </section>
         <section class="bg-gray-100 w-full rounded-2xl">
             <!-- Table Header -->
-            <div class="hidden lg:grid grid-cols-6 gap-4 font-bold text-white bg-gray-600 p-4 rounded-xl">
+            <div class="hidden lg:grid grid-cols-6 gap-4 font-bold text-[#FADE73] bg-gray-600 p-4 rounded-xl">
                 <span class="px-2">Foto</span>
                 <span class="px-2">Nama</span>
                 <span class="px-2">Username</span>
@@ -60,8 +60,8 @@
 
             @foreach ($workers as $worker)
                 <!-- Table Rows -->
-                <div class="flex flex-col gap-4 mt-4">
-                    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-center bg-white p-4 rounded-xl shadow">
+                <div class="flex flex-col gap-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-center bg-[#F1F1F9] border-b-2 border-[#B2B6BB] p-4 rounded-b-2xl">
                         <div class="flex justify-center lg:justify-start px-2">
                             @if ($worker->photo)
                                 <img src="{{ 'storage/' . $worker->photo }}" alt="{{ $worker->name }}"
