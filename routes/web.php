@@ -20,6 +20,9 @@ Route::get('/webgis', function () {
     return view('webgis');
 })->name('webgis');
 
+Route::get('/api/nearby-suppliers', [\App\Http\Controllers\SupplierController::class, 'getNearbySuppliers']);
+
+
 Route::get('/login', [AuthController::class, 'login'])->name("login")->middleware("guest");
 Route::post('/auth', [AuthController::class, 'authentication'])->name("auth")->middleware("guest");
 

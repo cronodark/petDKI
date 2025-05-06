@@ -100,4 +100,36 @@ class SupplierController extends Controller
         $suppliers = Supplier::all();
         return view('webgis', compact('suppliers'));
     }
+
+    public function getNearbySuppliers()
+    {
+        $refLat = request()->query('lat', -6.200000);
+        $refLng = request()->query('lng', 106.816666);
+    
+        $suppliers = DB::table('suppliers')
+            ->select(
+                'id',
+                'name',
+                'address',
+                'latitude',
+                'longitude',
+                'phone',
+                'description',
+                'photo_url',
+                'category',
+                DB::raw("ST_DistanceSphere(
+                    ST_MakePoint(longitude::float, latitude::float),
+                    ST_MakePoint($refLng, $refLat)
+                ) as distance")
+            )
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderBy('distance')
+            ->limit(5)
+            ->get();
+    
+        return response()->json($suppliers);
+    }
+    
+    
 }

@@ -30,6 +30,61 @@
             border-color: #ccc;
         }
 
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .shop-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .shop-distance {
+            font-weight: bold;
+            color: #000;
+        }
+
+        #searchResults {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            width: 100%;
+            background: white;
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .shop-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .shop-distance {
+            font-weight: bold;
+            color: #555;
+        }
+
+
+
     </style>
 </head>
 <body class="h-screen overflow-hidden">
@@ -80,9 +135,9 @@
                     class="w-full bg-white px-5 py-3 pr-12 rounded-full border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
                 <img src="{{ asset('image/search.svg') }}" 
                     alt="search icon"
-                    class="absolute right-6 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer" />
+                    class="absolute bottom-1 right-6 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer" />
             </div>
-            <ul id="searchResults" class="bg-white mt-2 rounded shadow-md hidden max-h-60 overflow-y-auto"></ul>
+            <ul id="searchResults" class="search-dropdown hidden"></ul>
         </div>
 
     </div>
@@ -232,9 +287,7 @@
 
                         searchResults.classList.add('hidden');
                         searchBox.value = supplier.name;
-
                         adjustSearchBarPosition();
-
                     });
 
                     searchResults.appendChild(li);
@@ -243,6 +296,172 @@
                 searchResults.classList.remove('hidden');
             });
 
+            const results = document.getElementById('searchResults');
+            const latRef = -6.200000; // titik pusat
+            const lngRef = 106.816666;
+
+            let tempRoutingControl = null;
+
+            function getRouteDistance(lat1, lng1, callback) {
+            const routing = L.Routing.control({
+                waypoints: [
+                    L.latLng(latRef, lngRef),
+                    L.latLng(lat1, lng1)
+                ],
+                router: L.Routing.osrmv1({
+                    serviceUrl: 'https://router.project-osrm.org/route/v1'
+                }),
+                createMarker: () => null,
+                addWaypoints: false,
+                fitSelectedRoutes: false,
+                show: false
+            })
+            .on('routesfound', function (e) {
+                const route = e.routes[0];
+                const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+                console.log('Got distance:', distanceKm);
+                callback(distanceKm);
+                routing.remove(tempRoutingControl);
+            })
+            .on('routingerror', function () {
+                console.warn('Routing error');
+                callback(null);
+                routing.remove(tempRoutingControl);
+            })
+            .addTo(map);
+        }
+
+        searchBox.addEventListener('focus', function () {
+            if (this.value.trim() === '') {
+                fetch('/api/nearby-suppliers')
+                    .then(res => res.json())
+                    .then(data => {
+                        results.innerHTML = '';
+                        results.classList.remove('hidden');
+
+                        data.forEach(supplier => {
+                            getRouteDistance(supplier.latitude, supplier.longitude, function (distanceKm) {
+                            const li = document.createElement('li');
+                                li.classList.add('result-item');
+                                li.innerHTML = `
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <strong>${supplier.name}</strong><br>
+                                            ${supplier.address}
+                                        </div>
+                                        <div style="white-space: nowrap; font-weight: bold;">
+                                            ${distanceKm ? distanceKm + ' Km' : 'n/a'}
+                                        </div>
+                                    </div>
+                                `;
+
+                                  // 👇 Tambahkan ini agar bisa klik dan flyTo
+                                    li.addEventListener('click', () => {
+                                        showInfoPanel(supplier);
+                                        map.flyTo([supplier.latitude, supplier.longitude], 18, {
+                                            animate: true,
+                                            duration: 1.5
+                                        });
+
+                                        results.classList.add('hidden');
+                                        searchBox.value = supplier.name;
+                                        adjustSearchBarPosition();
+                                    });
+
+                                searchResults.appendChild(li);
+                            });
+                            searchResults.classList.remove('hidden');
+                        });
+                    });
+            }
+        });
+
+
+
+
+
+        
+        // Ambil semua supplier sekali saja
+        fetch('/api/nearby-suppliers')
+            .then(res => res.json())
+            .then(data => {
+                allSuppliers = data;
+            });
+
+        searchBox.addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+
+            if (query === '') {
+                results.classList.add('hidden');
+                results.innerHTML = '';
+                return;
+            }
+
+            const filtered = allSuppliers.filter(supplier =>
+                supplier.name.toLowerCase().includes(query)
+            );
+
+            // Tunggu semua jarak selesai dihitung
+            Promise.all(filtered.map(supplier => {
+                return new Promise(resolve => {
+                    getRouteDistance(supplier.latitude, supplier.longitude, function (distanceKm) {
+                        resolve({
+                            ...supplier,
+                            distance: distanceKm ? parseFloat(distanceKm) : null
+                        });
+                    });
+                });
+            })).then(suppliersWithDistance => {
+                // Urutkan berdasarkan jarak terdekat
+                suppliersWithDistance.sort((a, b) => a.distance - b.distance);
+
+                results.innerHTML = '';
+                results.classList.remove('hidden');
+
+
+
+                suppliersWithDistance.forEach(supplier => {
+                    const li = document.createElement('li');
+                    li.classList.add('result-item');
+                    li.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${supplier.name}</strong><br>
+                                ${supplier.address}
+                            </div>
+                            <div style="white-space: nowrap; font-weight: bold;">
+                                ${supplier.distance !== null ? supplier.distance.toFixed(2) + ' Km' : 'n/a'}
+                            </div>
+                        </div>
+                    `;
+
+                    // 👇 tambahkan ini
+                    li.addEventListener('click', () => {
+                        showInfoPanel(supplier);
+                        map.flyTo([supplier.latitude, supplier.longitude], 18, {
+                            animate: true,
+                            duration: 1.5
+                        });
+
+                        results.classList.add('hidden');
+                        searchBox.value = supplier.name;
+                        adjustSearchBarPosition();
+                    });
+
+                    results.appendChild(li);
+                });
+            });
+
+        });
+
+        document.addEventListener('click', function(event) {
+            const isClickInsideSearchBox = searchBox.contains(event.target);
+            const isClickInsideResults = results.contains(event.target);
+
+            if (!isClickInsideSearchBox && !isClickInsideResults) {
+                results.classList.add('hidden');
+            }
+        });
 
 
             // Posisi Search
@@ -270,9 +489,9 @@
             div.innerHTML += `<div class="font-bold mb-2 text-gray-700">Keterangan :</div>`;
 
             const categories = [
-                { name: 'Toko Pusat', icon: '{{ asset("image/Toko_Utama.svg") }}' },
-                { name: 'Toko Cabang', icon: '{{ asset("image/Cabang.svg") }}' },
-                { name: 'Partner', icon: '{{ asset("image/Partner.svg") }}' },
+                { name: 'Toko Pusat', icon: '{{ asset("image/Toko_Utama2.svg") }}' },
+                { name: 'Toko Cabang', icon: '{{ asset("image/Cabang2.svg") }}' },
+                { name: 'Partner', icon: '{{ asset("image/Partner2.svg") }}' },
             ];
 
             categories.forEach(cat => {
@@ -302,19 +521,19 @@
 
         const categoryIcons = {
             "Toko Pusat": L.icon({
-                iconUrl: '{{ asset("image/Toko_Utama.svg") }}',
+                iconUrl: '{{ asset("image/Toko_Utama2.svg") }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             }),
             "Toko Cabang": L.icon({
-                iconUrl: '{{ asset("image/Cabang.svg") }}',
+                iconUrl: '{{ asset("image/Cabang2.svg") }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             }),
             "Partner": L.icon({
-                iconUrl: '{{ asset("image/Partner.svg") }}',
+                iconUrl: '{{ asset("image/Partner2.svg") }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
@@ -437,41 +656,48 @@
             </div>
         `;
         adjustSearchBarPosition();
-    }
+    }   
 
-            //  Get API
-            fetch('/api/suppliers')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(supplier => {
-                        const icon = categoryIcons[supplier.category] || categoryIcons["default"];
-                        const marker = L.marker([supplier.latitude, supplier.longitude], { icon }).addTo(map);
-                        let lastOpenedSupplierId = null;
-                        supplier.marker = marker;
+        let lastOpenedSupplierId = null;
 
-                        marker.bindPopup(`
-                            <b>${supplier.name}</b><br>
-                            ${supplier.address}<br>
-                            <img src="${supplier.image_url}" alt="${supplier.name}" style="width:100px; margin-top:5px;">
-                            <p style="margin-top:5px">${supplier.description}</p>
-                            <p>${supplier.phone}</p>
-                        `);
-                        marker.on('click', () => {
-                            if (lastOpenedSupplierId === supplier.id) {
-                                document.getElementById('info-panel').classList.add('hidden');
-                                lastOpenedSupplierId = null;
-                                adjustSearchBarPosition();
-                            } else {
-                                showInfoPanel(supplier);
-                                lastOpenedSupplierId = supplier.id;
-                                togglePanel('info');
-                            }
-                        });
+        // Get API
+        fetch('/api/suppliers')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(supplier => {
+                    const icon = categoryIcons[supplier.category] || categoryIcons["default"];
+                    const marker = L.marker([supplier.latitude, supplier.longitude], { icon }).addTo(map);
+                    supplier.marker = marker;
+
+                    const popupContent = `
+                        <b>${supplier.name}</b><br>
+                        ${supplier.address}<br>
+                        <img src="${supplier.image_url}" alt="${supplier.name}" style="width:100px; margin-top:5px;">
+                        <p style="margin-top:5px">${supplier.description}</p>
+                        <p>${supplier.phone}</p>
+                    `;
+
+                    marker.bindPopup(popupContent);
+
+
+                    marker.on('click', () => {
+                        if (lastOpenedSupplierId === supplier.id) {
+                            marker.closePopup();
+                            document.getElementById('info-panel').classList.add('hidden');
+                            lastOpenedSupplierId = null;
+                            adjustSearchBarPosition();
+                        } else {
+                            marker.openPopup();
+                            showInfoPanel(supplier);
+                            lastOpenedSupplierId = supplier.id;
+                            togglePanel('info');
+                        }
                     });
-
-                    allSuppliers = data;
-                    window.allSuppliers = data;
                 });
+
+                allSuppliers = data;
+                window.allSuppliers = data;
+            });
 
 
                 function togglePanel(panelIdToShow) {
