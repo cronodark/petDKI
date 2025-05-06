@@ -12,8 +12,10 @@
     <ul class="flex space-x-8 text-gray-800 font-semibold">
         <li><a href="#home" class="hover:text-blue-600">Home</a></li>
         <li><a href="#product" class="hover:text-blue-600">Produk</a></li>
+        <li><a href="{{ route('company-profile.catalog') }}" class="hover:text-blue-600">Katalog</a></li>
         <li><a href="#maps" class="hover:text-blue-600">Pemesanan</a></li>
         <li><a href="#about" class="hover:text-blue-600">Tentang Kami</a></li>
+
     </ul>
 </nav>
 

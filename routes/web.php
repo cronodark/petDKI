@@ -68,17 +68,15 @@ Route::middleware("auth")->group(function () {
         Route::prefix('warehouse')->name('warehouse.')->group(function () {
             //product
             Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-            Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
             Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
             Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-            Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
-            Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-            //report
-            Route::get('/products/report/pdf', [ProductController::class, 'generatePdfRecap'])->name('products.pdf.recap');
-            //category
+            Route::patch('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+            Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
             // Categories
             Route::resource('categories', CategoryController::class)->except(['show']);
-            Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.delete');
+            Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])
+                ->name('categories.delete');
             //supply
             Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
             Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');

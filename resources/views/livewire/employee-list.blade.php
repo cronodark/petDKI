@@ -14,7 +14,7 @@
                         onclick="toggleFilterDropdown()">
                         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5fceb2b38570db72ffd3900e2dcc53fdd3b9d6da59bad07f63c84cc6caa5a517"
                             class="w-5" />
-                        <span>Filter</span>
+                        <span>Sortir</span>
                         <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -92,61 +92,62 @@
                     </div>
                 </div>
             @endforeach
-            <div class="mt-6">
-                @if ($workers->hasPages())
-                    <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
-                        aria-label="Pagination" style="animation-delay: 0.6s">
 
-                        <!-- Previous Page -->
-                        @if ($workers->onFirstPage())
-                            <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
-                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                                    alt="Prev" class="object-contain w-3 aspect-[0.55]" />
-                                <span>Previous</span>
-                            </span>
-                        @else
-                            <a href="{{ $workers->previousPageUrl() }}" class="flex gap-3 items-center btn-hover">
-                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
-                                    alt="Prev" class="object-contain w-3 aspect-[0.55]" />
-                                <span>Previous</span>
-                            </a>
-                        @endif
-
-                        <!-- Page Numbers -->
-                        <div class="flex gap-5 items-center self-stretch">
-                            @foreach ($workers->getUrlRange(1, $workers->lastPage()) as $page => $url)
-                                @if ($page == $workers->currentPage())
-                                    <span
-                                        class="self-stretch px-3 py-1 text-white rounded-md bg-slate-600 text-center pulse-effect"
-                                        aria-current="page">
-                                        {{ $page }}
-                                    </span>
-                                @else
-                                    <a href="{{ $url }}" class="btn-hover"
-                                        aria-label="Go to page {{ $page }}">
-                                        {{ $page }}
-                                    </a>
-                                @endif
-                            @endforeach
-                        </div>
-
-                        <!-- Next Page -->
-                        @if ($workers->hasMorePages())
-                            <a href="{{ $workers->nextPageUrl() }}" class="flex gap-3.5 items-center btn-hover">
-                                <span>Next</span>
-                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
-                                    alt="Next" class="object-contain w-3 aspect-[0.55]" />
-                            </a>
-                        @else
-                            <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
-                                <span>Next</span>
-                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
-                                    alt="Next" class="object-contain w-3 aspect-[0.55]" />
-                            </span>
-                        @endif
-                    </nav>
-                @endif
-            </div>
         </section>
+        <div class="mt-6">
+            @if ($workers->hasPages())
+                <nav class="flex flex-wrap gap-5 justify-between items-start mt-9 mr-7 ml-7 pb-5 text-xl font-medium whitespace-nowrap text-slate-600 max-md:mr-2.5 max-md:max-w-full fade-in"
+                    aria-label="Pagination" style="animation-delay: 0.6s">
+
+                    <!-- Previous Page -->
+                    @if ($workers->onFirstPage())
+                        <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
+                                alt="Prev" class="object-contain w-3 aspect-[0.55]" />
+                            <span>Previous</span>
+                        </span>
+                    @else
+                        <a href="{{ $workers->previousPageUrl() }}" class="flex gap-3 items-center btn-hover">
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
+                                alt="Prev" class="object-contain w-3 aspect-[0.55]" />
+                            <span>Previous</span>
+                        </a>
+                    @endif
+
+                    <!-- Page Numbers -->
+                    <div class="flex gap-5 items-center self-stretch">
+                        @foreach ($workers->getUrlRange(1, $workers->lastPage()) as $page => $url)
+                            @if ($page == $workers->currentPage())
+                                <span
+                                    class="self-stretch px-3 py-1 text-white rounded-md bg-slate-600 text-center pulse-effect"
+                                    aria-current="page">
+                                    {{ $page }}
+                                </span>
+                            @else
+                                <a href="{{ $url }}" class="btn-hover"
+                                    aria-label="Go to page {{ $page }}">
+                                    {{ $page }}
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <!-- Next Page -->
+                    @if ($workers->hasMorePages())
+                        <a href="{{ $workers->nextPageUrl() }}" class="flex gap-3.5 items-center btn-hover">
+                            <span>Next</span>
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
+                                alt="Next" class="object-contain w-3 aspect-[0.55]" />
+                        </a>
+                    @else
+                        <span class="flex gap-3 items-center cursor-not-allowed text-gray-400">
+                            <span>Next</span>
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
+                                alt="Next" class="object-contain w-3 aspect-[0.55]" />
+                        </span>
+                    @endif
+                </nav>
+            @endif
+        </div>
     </section>
 </main>

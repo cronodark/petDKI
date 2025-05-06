@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         if ($user && Auth::attempt(['email' => $user->email, 'password' => $password])) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard'); // redirect ke halaman dashboard
+            return redirect()->route('dashboard')->with('success', "Login Berhasil!"); // redirect ke halaman dashboard
         }
         return back()->withErrors([
             'identifier' => 'The provided credentials do not match our records.',
@@ -48,6 +48,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Logout berhasil');
     }
 }

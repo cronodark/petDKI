@@ -64,7 +64,7 @@ class DashboardController extends Controller
             'lowStockProducts' => collect(),
             'monthlySales' => collect(),
             'salesByCategory' => collect(),
-            'stockMovementByCategory' => collect(),
+            'stockMovement' => collect(),
             'stockHistory' => collect(),
             'dailySales' => collect(),
         ];
@@ -88,19 +88,15 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
             
-        // Stock movements by category
-        $data['stockMovementByCategory'] = DB::table('stock_adjustments')
-            ->join('products', 'products.id', '=', 'stock_adjustments.product_id')
-            ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->select(
-                'categories.category_name',
-                DB::raw('SUM(CASE WHEN adjustment_type = "increase" THEN quantity ELSE 0 END) as total_in'),
-                DB::raw('SUM(CASE WHEN adjustment_type = "decrease" THEN quantity ELSE 0 END) as total_out')
-            )
-            ->where('stock_adjustments.created_at', '>=', Carbon::now()->subMonths(3))
-            ->groupBy('categories.category_name')
-            ->get();
-            
+        // Monthly stock movement 
+        $data['stockMovement'] = DB::table('stock_adjustments')
+        ->select(
+            DB::raw('SUM(CASE WHEN adjustment_type = "increase" THEN quantity ELSE 0 END) as total_in'),
+            DB::raw('SUM(CASE WHEN adjustment_type = "decrease" THEN quantity ELSE 0 END) as total_out')
+        )
+        ->where('created_at', '>=', Carbon::now()->subDays(30)) // using 30 days as in the UI
+        ->first();
+
         // Stock history over time (last 6 months)
         $data['stockHistory'] = DB::table('stock_adjustments')
             ->select(
@@ -118,6 +114,8 @@ class DashboardController extends Controller
             });
             
         $data['userRole'] = 'warehouse';
+
+        return route('dashboard', $data);
     }
     
     private function getManagerData(&$data)
@@ -170,6 +168,8 @@ class DashboardController extends Controller
             ->get();
             
         $data['userRole'] = 'manager';
+
+        return view('dashboard', $data);
     }
     
     private function getCashierData(&$data)
