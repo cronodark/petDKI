@@ -101,7 +101,7 @@
 
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pemasukkan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
@@ -111,9 +111,9 @@
 
                         <!-- Total Expenses -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalOutcome, 0) }}</span>
-                            <h3 class="mt-3 text-xl text-white">Total </h3>
+                            <h3 class="mt-3 text-xl text-white">Total Pengeluaran</h3>
                             <div class="text-gray-300 text-lg mt-auto">
                                 <i class="fas fa-minus-circle"></i>
                             </div>
@@ -123,7 +123,7 @@
                     @if ($userRole == 'cashier')
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pendapatan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
@@ -477,159 +477,159 @@
                 }
                 
                 // Monthly Stock Movement Chart (for Stock In/Out section)
-                const monthlyStockMovementCtx = document.getElementById('monthlyStockMovementChart');
-                if (monthlyStockMovementCtx) {
-                    // This would typically be data from your backend
-                    // Creating sample data for last 30 days
-                    const lastMonthDates = [];
-                    const stockInValues = [];
-                    const stockOutValues = [];
+            //     const monthlyStockMovementCtx = document.getElementById('monthlyStockMovementChart');
+            //     if (monthlyStockMovementCtx) {
+            //         // This would typically be data from your backend
+            //         // Creating sample data for last 30 days
+            //         const lastMonthDates = [];
+            //         const stockInValues = [];
+            //         const stockOutValues = [];
                     
-                    // Generate sample data for the last 30 days
-                    for (let i = 29; i >= 0; i--) {
-                        const date = moment().subtract(i, 'days');
+            //         // Generate sample data for the last 30 days
+            //         for (let i = 29; i >= 0; i--) {
+            //             const date = moment().subtract(i, 'days');
                         
-                        // Only add labels for every 5th day for readability
-                        if (i % 5 === 0) {
-                            lastMonthDates.push(date.format('DD MMM'));
-                        } else {
-                            lastMonthDates.push('');
-                        }
+            //             // Only add labels for every 5th day for readability
+            //             if (i % 5 === 0) {
+            //                 lastMonthDates.push(date.format('DD MMM'));
+            //             } else {
+            //                 lastMonthDates.push('');
+            //             }
                         
-                        // Generate random but somewhat consistent data
-                        const base = Math.floor(Math.random() * 30) + 5;
-                        stockInValues.push(base + Math.floor(Math.random() * 15));
-                        stockOutValues.push(base - Math.floor(Math.random() * 10));
-                    }
+            //             // Generate random but somewhat consistent data
+            //             const base = Math.floor(Math.random() * 30) + 5;
+            //             stockInValues.push(base + Math.floor(Math.random() * 15));
+            //             stockOutValues.push(base - Math.floor(Math.random() * 10));
+            //         }
                     
-                    new Chart(monthlyStockMovementCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: lastMonthDates,
-                            datasets: [
-                                {
-                                    label: 'Stock In',
-                                    data: stockInValues,
-                                    backgroundColor: 'rgba(28, 200, 138, 0.8)',
-                                    borderColor: 'rgba(28, 200, 138, 1)',
-                                    borderWidth: 1
-                                },
-                                {
-                                    label: 'Stock Out',
-                                    data: stockOutValues,
-                                    backgroundColor: 'rgba(231, 74, 59, 0.8)',
-                                    borderColor: 'rgba(231, 74, 59, 1)',
-                                    borderWidth: 1
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    grid: {
-                                        color: 'rgba(255, 255, 255, 0.1)'
-                                    },
-                                    ticks: {
-                                        color: '#A3AED0',
-                                        callback: function(value) {
-                                            return value;
-                                        }
-                                    }
-                                },
-                                x: {
-                                    grid: {
-                                        display: false
-                                    },
-                                    ticks: {
-                                        color: '#A3AED0',
-                                        autoSkip: true,
-                                        maxRotation: 0
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: true,
-                                    position: 'top',
-                                    labels: {
-                                        color: '#A3AED0',
-                                        usePointStyle: true,
-                                        boxWidth: 8,
-                                        padding: 10
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
+            //         new Chart(monthlyStockMovementCtx, {
+            //             type: 'bar',
+            //             data: {
+            //                 labels: lastMonthDates,
+            //                 datasets: [
+            //                     {
+            //                         label: 'Stock In',
+            //                         data: stockInValues,
+            //                         backgroundColor: 'rgba(28, 200, 138, 0.8)',
+            //                         borderColor: 'rgba(28, 200, 138, 1)',
+            //                         borderWidth: 1
+            //                     },
+            //                     {
+            //                         label: 'Stock Out',
+            //                         data: stockOutValues,
+            //                         backgroundColor: 'rgba(231, 74, 59, 0.8)',
+            //                         borderColor: 'rgba(231, 74, 59, 1)',
+            //                         borderWidth: 1
+            //                     }
+            //                 ]
+            //             },
+            //             options: {
+            //                 responsive: true,
+            //                 maintainAspectRatio: false,
+            //                 scales: {
+            //                     y: {
+            //                         beginAtZero: true,
+            //                         grid: {
+            //                             color: 'rgba(255, 255, 255, 0.1)'
+            //                         },
+            //                         ticks: {
+            //                             color: '#A3AED0',
+            //                             callback: function(value) {
+            //                                 return value;
+            //                             }
+            //                         }
+            //                     },
+            //                     x: {
+            //                         grid: {
+            //                             display: false
+            //                         },
+            //                         ticks: {
+            //                             color: '#A3AED0',
+            //                             autoSkip: true,
+            //                             maxRotation: 0
+            //                         }
+            //                     }
+            //                 },
+            //                 plugins: {
+            //                     legend: {
+            //                         display: true,
+            //                         position: 'top',
+            //                         labels: {
+            //                             color: '#A3AED0',
+            //                             usePointStyle: true,
+            //                             boxWidth: 8,
+            //                             padding: 10
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         });
+            //     }
                 
-                // Stock History Chart (preserve original functionality)
-                const stockHistoryCtx = document.getElementById('stockHistoryChart');
-                if (stockHistoryCtx) {
-                    new Chart(stockHistoryCtx, {
-                        type: 'line',
-                        data: {
-                            labels: [
-                                @foreach ($stockHistory as $item)
-                                    '{{ $item->month_name }}',
-                                @endforeach
-                            ],
-                            datasets: [{
-                                label: 'Net Stock Change',
-                                data: [
-                                    @foreach ($stockHistory as $item)
-                                        {{ $item->net_change }},
-                                    @endforeach
-                                ],
-                                backgroundColor: 'rgba(78, 115, 223, 0.05)',
-                                borderColor: '#FADE73',
-                                pointRadius: 3,
-                                pointBackgroundColor: 'rgba(78, 115, 223, 1)',
-                                pointBorderColor: 'rgba(78, 115, 223, 1)',
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
-                                pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
-                                pointHitRadius: 10,
-                                pointBorderWidth: 2,
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: false,
-                                    grid: {
-                                        color: 'rgba(0, 0, 0, 0.05)'
-                                    },
-                                    ticks: {
-                                        color: '#A3AED0',
-                                        callback: function(value) {
-                                            return value + ' units';
-                                        }
-                                    }
-                                },
-                                x: {
-                                    ticks: {
-                                        color: '#A3AED0'
-                                    },
-                                    grid: {
-                                        display: false
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            }
-                        }
-                    });
-                }
+            //     // Stock History Chart (preserve original functionality)
+            //     const stockHistoryCtx = document.getElementById('stockHistoryChart');
+            //     if (stockHistoryCtx) {
+            //         new Chart(stockHistoryCtx, {
+            //             type: 'line',
+            //             data: {
+            //                 labels: [
+            //                     @foreach ($stockHistory as $item)
+            //                         '{{ $item->month_name }}',
+            //                     @endforeach
+            //                 ],
+            //                 datasets: [{
+            //                     label: 'Net Stock Change',
+            //                     data: [
+            //                         @foreach ($stockHistory as $item)
+            //                             {{ $item->net_change }},
+            //                         @endforeach
+            //                     ],
+            //                     backgroundColor: 'rgba(78, 115, 223, 0.05)',
+            //                     borderColor: '#FADE73',
+            //                     pointRadius: 3,
+            //                     pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+            //                     pointBorderColor: 'rgba(78, 115, 223, 1)',
+            //                     pointHoverRadius: 5,
+            //                     pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+            //                     pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+            //                     pointHitRadius: 10,
+            //                     pointBorderWidth: 2,
+            //                     tension: 0.3
+            //                 }]
+            //             },
+            //             options: {
+            //                 responsive: true,
+            //                 maintainAspectRatio: false,
+            //                 scales: {
+            //                     y: {
+            //                         beginAtZero: false,
+            //                         grid: {
+            //                             color: 'rgba(0, 0, 0, 0.05)'
+            //                         },
+            //                         ticks: {
+            //                             color: '#A3AED0',
+            //                             callback: function(value) {
+            //                                 return value + ' units';
+            //                             }
+            //                         }
+            //                     },
+            //                     x: {
+            //                         ticks: {
+            //                             color: '#A3AED0'
+            //                         },
+            //                         grid: {
+            //                             display: false
+            //                         }
+            //                     }
+            //                 },
+            //                 plugins: {
+            //                     legend: {
+            //                         display: false
+            //                     }
+            //                 }
+            //             }
+            //         });
+            //     }
             }
 
 
