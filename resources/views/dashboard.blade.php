@@ -99,7 +99,7 @@
 
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pemasukkan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
@@ -120,7 +120,7 @@
                     @if ($userRole == 'cashier')
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pendapatan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
