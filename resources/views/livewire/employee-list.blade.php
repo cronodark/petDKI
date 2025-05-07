@@ -83,9 +83,9 @@
                                 class="inline delete-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
+                                <button type="button"
                                     class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm delete-button">
-                                    Delete
+                                    Hapus
                                 </button>
                             </form>
                         </div>

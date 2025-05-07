@@ -158,7 +158,7 @@
                             <th style="width: 10%;" class="center-cell">Jumlah</th>
                             <th style="width: 20%;">Alasan</th>
                             <th style="width: 10%;">Tanggal</th>
-                            <th style="width: 25%;" class="center-cell">Aksi</th>
+                            {{-- <th style="width: 25%;" class="center-cell">Aksi</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -166,13 +166,10 @@
                             <tr>
                                 <td>{{ $adjustment->id }}</td>
                                 <td>
-                                    <a href="{{ route('products.index', $adjustment->product_id) }}" 
-                                        class="text-blue-600 hover:underline">
-                                        {{ $adjustment->product->product_name ?? 'Unknown Product' }}
-                                    </a>
+                                    {{ $adjustment->product->product_name ?? 'Unknown Product' }}
                                 </td>
                                 <td class="center-cell">
-                                    @if($adjustment->adjustment_type == 'in')
+                                    @if ($adjustment->adjustment_type == 'in')
                                         <span class="badge-addition">Penambahan</span>
                                     @else
                                         <span class="badge-subtraction">Pengurangan</span>
@@ -181,7 +178,7 @@
                                 <td class="center-cell">{{ $adjustment->quantity }}</td>
                                 <td>{{ $adjustment->reason }}</td>
                                 <td>{{ $adjustment->created_at->format('d/m/Y') }}</td>
-                                <td class="action-cell">
+                                {{-- <td class="action-cell">
                                     <div class="flex justify-center gap-2">
                                         <a href="{{ route('warehouse.stockadj.edit', $adjustment->id) }}"
                                             class="px-4 py-1 rounded-xl border-2 border-slate-600 text-slate-600 transition-all hover:brightness-110">
@@ -198,7 +195,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -217,7 +214,8 @@
                                     <span>Previous</span>
                                 </span>
                             @else
-                                <a href="{{ $stockAdjustments->previousPageUrl() }}" class="flex gap-3 items-center btn-hover">
+                                <a href="{{ $stockAdjustments->previousPageUrl() }}"
+                                    class="flex gap-3 items-center btn-hover">
                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d41ad5f2937bf2878cb2045a2aff05bdb36c3207"
                                         alt="Prev" class="object-contain w-3 aspect-[0.55]" />
                                     <span>Previous</span>
@@ -244,7 +242,8 @@
 
                             <!-- Next Page -->
                             @if ($stockAdjustments->hasMorePages())
-                                <a href="{{ $stockAdjustments->nextPageUrl() }}" class="flex gap-3.5 items-center btn-hover">
+                                <a href="{{ $stockAdjustments->nextPageUrl() }}"
+                                    class="flex gap-3.5 items-center btn-hover">
                                     <span>Next</span>
                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d15578e15c255f9ec78c7db8e35631674a3faa8b"
                                         alt="Next" class="object-contain w-3 aspect-[0.55]" />

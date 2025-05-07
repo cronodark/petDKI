@@ -12,7 +12,7 @@ class StockAdjustController extends Controller
         $stockAdjustments = StockAdjustments::with(['product', 'user'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        
+
         return view('dashboard.warehouse.stockadj.main', compact('stockAdjustments'));
     }
 
@@ -20,7 +20,7 @@ class StockAdjustController extends Controller
     {
         $adjustment = StockAdjustments::findOrFail($id);
         $products = Product::all();
-        
+
         return view('dashboard.warehouse.stockadj.edit', compact('adjustment', 'products'));
     }
 
@@ -58,11 +58,18 @@ class StockAdjustController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'adjustment_type' => 'required|in:addition,subtraction',
+            'adjustment_type' => 'required|in:in,out',
             'quantity' => 'required|integer|min:1',
             'reason' => 'required|string|max:255',
             'product_id' => 'required|exists:products,id',
         ]);
+
+        $product = Product::findOrFail($request->product_id);
+        if ($request->adjustment_type == 'in') {
+            $product->increment('stock', $request->quantity);
+        } else {
+            $product->decrement('stock', $request->quantity);
+        }
 
         // Add the current user ID to the request
         $data = $request->all();

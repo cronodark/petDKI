@@ -54,42 +54,40 @@
                 <div class="flex gap-8 text-xl max-md:max-w-full">
                     <a href="{{ route('warehouse.stockadj.index') }}"
                         class="flex gap-4 px-6 py-3 text-white rounded-2xl bg-slate-600 max-md:px-5 transition-all hover:brightness-110">
-                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0e54b7a6e3b41b5b54bb5510781e2a9d2623c1fc?placeholderIfAbsent=true&apiKey=b6e760062608466c9c09a9a54edb9b26"
-                            alt="Back icon" class="object-contain shrink-0 w-6 aspect-square">
                         <span class="basis-auto">Kembali</span>
                     </a>
                 </div>
             </div>
-            
+
             <div class="flex flex-col p-8 mt-10 w-full text-xl rounded-2xl bg-slate-100 max-md:max-w-full">
                 <form action="{{ route('warehouse.stockadj.store') }}" method="POST">
                     @csrf
-                    
+
                     <div class="mb-6">
                         <label for="product_id" class="form-label">Produk</label>
                         <select name="product_id" id="product_id" class="form-input" required>
-                            <option value="">-- Pilih Produk --</option>
+                            <option value="" selected disabled hidden>-- Pilih Produk --</option>
                             @foreach($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                <option value="{{ $product->id }}">{{ $product->product_name }}</option>
                             @endforeach
                         </select>
                         @error('product_id')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-6">
                         <label for="adjustment_type" class="form-label">Tipe Penyesuaian</label>
                         <select name="adjustment_type" id="adjustment_type" class="form-input" required>
-                            <option value="">-- Pilih Tipe --</option>
-                            <option value="addition">Penambahan</option>
-                            <option value="subtraction">Pengurangan</option>
+                            <option value="" selected disabled hidden>-- Pilih Tipe --</option>
+                            <option value="in">Penambahan</option>
+                            <option value="out">Pengurangan</option>
                         </select>
                         @error('adjustment_type')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-6">
                         <label for="quantity" class="form-label">Jumlah</label>
                         <input type="number" name="quantity" id="quantity" class="form-input" min="1" required>
@@ -97,7 +95,7 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-6">
                         <label for="reason" class="form-label">Alasan</label>
                         <textarea name="reason" id="reason" rows="3" class="form-input" required></textarea>
@@ -105,9 +103,9 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
-                    
+
                     <div class="flex justify-end">
-                        <button type="submit" 
+                        <button type="submit"
                             class="px-6 py-3 text-white bg-slate-600 rounded-xl btn-hover">
                             Simpan Penyesuaian
                         </button>
