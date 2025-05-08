@@ -107,6 +107,16 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
+        if ($request->stock != $product->stock) {
+            StockAdjustments::create([
+                'product_id' => $product->id,
+                'quantity' => abs($request->stock - $product->stock),
+                'adjustment_type' => $request->stock > $product->stock ? 'in' : 'out',
+                'reason' => 'Stok produk diperbarui',
+                'user_id' => Auth::user()->id,
+            ]);
+        }
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }

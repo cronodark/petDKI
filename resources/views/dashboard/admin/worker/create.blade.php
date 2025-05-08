@@ -11,6 +11,20 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+
+        .form-input {
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(55, 73, 106, 0.2);
+            border-color: #64748B;
+        }
     </style>
 @endsection
 
@@ -45,8 +59,8 @@
             </div>
 
             <div class="mt-5">
-                <label for="role" class="block text-xl font-medium text-zinc-400 mb-2">Role</label>
-                <select id="role" name="role" class="w-full focus:outline-none text-lg py-2">
+                <label for="role" class="block form-label text-xl font-medium text-zinc-400 mb-2">Role</label>
+                <select id="role" name="role" class="w-full text-lg py-2 form-input">
                     <option value="-" selected disabled>Pilih Role</option>
                     <option value="cashier">Kasir</option>
                     <option value="warehouse">Gudang</option>

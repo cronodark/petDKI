@@ -1,6 +1,7 @@
 @extends('layouts.store')
 
 @section('content')
+
     <div class="flex min-h-screen">
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
@@ -51,7 +52,7 @@
                         </div>
 
                         <!-- Low Stock Items -->
-                        <div class="flex flex-col overflow-hidden rounded-2xl bg-slate-600 text-white min-w-[480px]">
+                        <div class="flex flex-col overflow-hidden rounded-2xl bg-slate-600 text-white min-w-full col-span-2">
                             <div class="px-8 py-6 border-b border-slate-500">
                                 <h3 class="text-2xl font-bold text-amber-200">Produk dengan Stok Rendah</h3>
                             </div>
@@ -67,26 +68,23 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($lowStockProducts as $product)
-                                            <tr class="border-b border-slate-700">
-                                                <td class="py-3 pr-4">{{ $product->product_name }}</td>
-                                                <td class="py-3 pr-4">{{ $product->category->category_name }}</td>
-                                                <td class="py-3 pr-4">
-                                                    <span class="px-2 py-1 rounded text-xs bg-red-600 text-white">
-                                                        {{ $product->stock }}
-                                                    </span>
-                                                </td>
-                                                <td class="py-3">{{ $product->sku }}</td>
-                                            </tr>
+                                            @foreach ($lowStockProducts as $product)
+                                                <tr class="border-b border-slate-700">
+                                                    <td class="py-3 pr-4">{{ $product->product_name }}</td>
+                                                    <td class="py-3 pr-4">{{ $product->category->category_name }}</td>
+                                                    <td class="py-3 pr-4">
+                                                        <span class="px-2 py-1 rounded text-xs bg-red-600 text-white">
+                                                            {{ $product->stock }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="py-3">{{ $product->sku }}</td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-
-                        
-
                     @endif
 
                     @if ($userRole == 'manager')
@@ -101,7 +99,7 @@
 
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pemasukkan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
@@ -111,9 +109,8 @@
 
                         <!-- Total Expenses -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
-                                {{ number_format($totalOutcome, 0) }}</span>
-                            <h3 class="mt-3 text-xl text-white">Total </h3>
+                            <span class="text-4xl font-bold tracking-tighter text-amber-200">{{ $totalTransactions }}</span>
+                            <h3 class="mt-3 text-xl text-white">Total Transaksi </h3>
                             <div class="text-gray-300 text-lg mt-auto">
                                 <i class="fas fa-minus-circle"></i>
                             </div>
@@ -123,7 +120,7 @@
                     @if ($userRole == 'cashier')
                         <!-- Total Income -->
                         <div class="flex flex-col overflow-hidden px-8 py-6 rounded-2xl bg-slate-600 text-white">
-                            <span class="text-4xl font-bold tracking-tighter text-amber-200">Rp
+                            <span class="text-3xl font-bold tracking-tighter text-amber-200">Rp
                                 {{ number_format($totalIncome, 0) }}</span>
                             <h3 class="mt-3 text-xl text-white">Total Pendapatan</h3>
                             <div class="text-gray-300 text-lg mt-auto">
@@ -166,12 +163,14 @@
                             @if ($userRole == 'warehouse')
                                 <div class="flex justify-between items-center mb-4">
                                     <strong class="text-2xl font-bold tracking-tighter leading-none text-amber-200">
-                                    Total Stok Terkini = {{ number_format($totalStock) }}
+                                        Total Stok Terkini = {{ number_format($totalStock) }}
                                     </strong>
                                     <div class="flex space-x-2">
-                                        <input type="week" id="weekSelector" class="bg-white text-slate-800 rounded px-2 py-1 text-sm" 
+                                        <input type="week" id="weekSelector"
+                                            class="bg-white text-slate-800 rounded px-2 py-1 text-sm"
                                             value="{{ now()->format('Y-\WW') }}">
-                                        <button id="refreshChart" class="bg-amber-200 text-slate-800 px-3 py-1 rounded text-sm">
+                                        <button id="refreshChart"
+                                            class="bg-amber-200 text-slate-800 px-3 py-1 rounded text-sm cursor-pointer">
                                             Perbarui
                                         </button>
                                     </div>
@@ -203,7 +202,8 @@
                     <!-- Recent Items (Smaller) -->
                     <div class="lg:col-span-1">
                         @if ($userRole == 'warehouse')
-                            <div class="flex overflow-hidden flex-col pt-5 px-7 py-8 h-full rounded-2xl bg-slate-600 text-white">
+                            <div
+                                class="flex overflow-hidden flex-col pt-5 px-7 py-8 h-full rounded-2xl bg-slate-600 text-white">
                                 <h3 class="text-2xl font-bold tracking-tight text-amber-200">
                                     Stock Terkini
                                 </h3>
@@ -226,7 +226,8 @@
                                 </div>
                             </div>
                         @elseif(($userRole == 'manager' || $userRole == 'cashier') && isset($recentTransactions))
-                            <div class="flex overflow-hidden flex-col pt-5 px-7 pb-8 h-full rounded-2xl bg-slate-600 text-white">
+                            <div
+                                class="flex overflow-hidden flex-col pt-5 px-7 pb-8 h-full rounded-2xl bg-slate-600 text-white">
                                 <h3 class="text-xl font-bold tracking-tight text-amber-200">
                                     Transaksi Terkini
                                 </h3>
@@ -249,7 +250,8 @@
                                 </div>
                             </div>
                         @else
-                            <div class="flex overflow-hidden flex-col pt-5 px-7 pb-8 h-full rounded-2xl bg-slate-600 text-white">
+                            <div
+                                class="flex overflow-hidden flex-col pt-5 px-7 pb-8 h-full rounded-2xl bg-slate-600 text-white">
                                 <p class="mt-4 text-gray-300">No data available</p>
                             </div>
                         @endif
@@ -314,66 +316,77 @@
             if (userRole === 'warehouse' || userRole === 'default') {
                 // Weekly Stock Chart with date selection
                 let weeklyStockChart = null;
-                
+
                 function fetchWeeklyStockData(weekValue) {
                     // In a real application, this would be an AJAX call to your backend
                     // For demonstration, we'll simulate the data based on the selected week
                     return new Promise((resolve) => {
                         // Parse year and week number from the input
                         const [year, week] = weekValue.split('-W');
-                        
+
                         // Simulate an API call with setTimeout
                         setTimeout(() => {
                             // Generate start date of the selected week
-                            const startOfWeek = moment().year(year).isoWeek(week).startOf('isoWeek');
-                            
+                            const startOfWeek = moment().year(year).isoWeek(week).startOf(
+                            'isoWeek');
+
                             // Generate daily labels for the week
                             const labels = [];
-                            const stockInData = [];
-                            const stockOutData = [];
+                            const stockInData = {!! json_encode($stockInData) !!};
+                            const stockOutData = {!! json_encode($stockOutData) !!};
+
+                            const stockInFinalData = [];
+                            const stockOutFinalData = [];
                             const netChangeData = [];
-                            
+
+                            console.log(stockInData, stockOutData); // For debugging
+
                             // Generate sample data for each day of the week
                             for (let i = 0; i < 7; i++) {
                                 const currentDay = moment(startOfWeek).add(i, 'days');
+                                const currentDate = currentDay.format('YYYY-MM-DD');
+
                                 labels.push(currentDay.format('ddd DD MMM'));
-                                
-                                // Generate random but somewhat consistent data
-                                const randomBase = Math.floor(Math.random() * 50) + 10;
-                                const stockIn = randomBase + Math.floor(Math.random() * 20);
-                                const stockOut = randomBase - Math.floor(Math.random() * 15);
-                                
-                                stockInData.push(stockIn);
-                                stockOutData.push(stockOut > 0 ? stockOut : 0);
-                                netChangeData.push(stockIn - (stockOut > 0 ? stockOut : 0));
+
+                                // Get stock in and stock out values for the day (defaults to 0 if missing)
+                                const stockIn = stockInData[currentDate] || 0;
+                                const stockOut = stockOutData[currentDate] || 0;
+
+                                // Push values to final data arrays
+                                stockInFinalData.push(stockIn);
+                                stockOutFinalData.push(stockOut);
+
+                                // Calculate net change for the day
+                                netChangeData.push(stockIn - stockOut);
                             }
-                            
+
+                            // Resolve the data for chart
                             resolve({
                                 labels,
-                                stockInData,
-                                stockOutData,
+                                stockInFinalData,
+                                stockOutFinalData,
                                 netChangeData
                             });
-                        }, 300);
+                        }, 300); // Simulate a delay (e.g., API call)
                     });
                 }
-                
+
+
                 function createWeeklyStockChart(data) {
                     const weeklyStockCtx = document.getElementById('weeklyStockChart');
-                    
+
                     if (weeklyStockChart) {
                         weeklyStockChart.destroy();
                     }
-                    
+
                     if (weeklyStockCtx) {
                         weeklyStockChart = new Chart(weeklyStockCtx, {
                             type: 'line',
                             data: {
                                 labels: data.labels,
-                                datasets: [
-                                    {
+                                datasets: [{
                                         label: 'Stock In',
-                                        data: data.stockInData,
+                                        data: data.stockInFinalData,
                                         backgroundColor: 'rgba(28, 200, 138, 0.1)',
                                         borderColor: '#1cc88a',
                                         pointRadius: 3,
@@ -386,7 +399,7 @@
                                     },
                                     {
                                         label: 'Stock Out',
-                                        data: data.stockOutData,
+                                        data: data.stockOutFinalData,
                                         backgroundColor: 'rgba(231, 74, 59, 0.1)',
                                         borderColor: '#e74a3b',
                                         pointRadius: 3,
@@ -464,18 +477,18 @@
                         });
                     }
                 }
-                
+
                 // Initialize the weekly stock chart with the current week
                 const weekSelector = document.getElementById('weekSelector');
                 if (weekSelector) {
                     fetchWeeklyStockData(weekSelector.value).then(createWeeklyStockChart);
-                    
+
                     // Event listener for refresh button
                     document.getElementById('refreshChart').addEventListener('click', function() {
                         fetchWeeklyStockData(weekSelector.value).then(createWeeklyStockChart);
                     });
                 }
-                
+
                 // Monthly Stock Movement Chart (for Stock In/Out section)
                 const monthlyStockMovementCtx = document.getElementById('monthlyStockMovementChart');
                 if (monthlyStockMovementCtx) {
@@ -484,30 +497,29 @@
                     const lastMonthDates = [];
                     const stockInValues = [];
                     const stockOutValues = [];
-                    
+
                     // Generate sample data for the last 30 days
                     for (let i = 29; i >= 0; i--) {
                         const date = moment().subtract(i, 'days');
-                        
+
                         // Only add labels for every 5th day for readability
                         if (i % 5 === 0) {
                             lastMonthDates.push(date.format('DD MMM'));
                         } else {
                             lastMonthDates.push('');
                         }
-                        
+
                         // Generate random but somewhat consistent data
                         const base = Math.floor(Math.random() * 30) + 5;
                         stockInValues.push(base + Math.floor(Math.random() * 15));
                         stockOutValues.push(base - Math.floor(Math.random() * 10));
                     }
-                    
+
                     new Chart(monthlyStockMovementCtx, {
                         type: 'bar',
                         data: {
                             labels: lastMonthDates,
-                            datasets: [
-                                {
+                            datasets: [{
                                     label: 'Stock In',
                                     data: stockInValues,
                                     backgroundColor: 'rgba(28, 200, 138, 0.8)',
@@ -565,7 +577,7 @@
                         }
                     });
                 }
-                
+
                 // Stock History Chart (preserve original functionality)
                 const stockHistoryCtx = document.getElementById('stockHistoryChart');
                 if (stockHistoryCtx) {

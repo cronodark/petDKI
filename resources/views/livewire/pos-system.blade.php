@@ -95,8 +95,7 @@
 
                 <button wire:click="payNow" id="payNowButton"
                     class="mt-6 w-full py-3 px-5 bg-slate-600 text-white text-lg font-semibold rounded hover:bg-slate-700 transition">
-                    <div class="flex justify-between"><span>Pay
-                            Now</span><span>Rp{{ number_format($totalPrice, 0, ',', '.') }}</span></div>
+                    <div class="flex justify-between"><span>Bayar</span><span>Rp{{ number_format($totalPrice, 0, ',', '.') }}</span></div>
                 </button>
             </div>
         </div>

@@ -72,7 +72,7 @@
 
     <!-- Transaction Table -->
     <section
-        class="flex flex-col pb-7 mt-3 w-full text-xl font-medium rounded-2xl bg-slate-100 text-slate-600 max-md:max-w-full relative"
+        class="flex flex-col pb-7 mt-3 w-full text-xl font-medium rounded-2xl bg-[#F1F1F9] text-slate-600 max-md:max-w-full relative"
         aria-label="Transaction list" id="transaction-table">
         <!-- Loading Overlay -->
         <div class="loading-overlay" id="table-loading">
