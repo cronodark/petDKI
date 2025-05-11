@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -7,14 +8,14 @@
     @vite('resources/css/app.css')
 
     <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Hash -->
     <script src="{{ asset('js/leaflet-hash.js') }}"></script>
 
     <!-- Coordinate -->
-    <link rel="stylesheet" href="{{ asset('css/L.Control.MousePosition.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/L.Control.MousePosition.css') }}" />
     <script src="{{ asset('js/L.Control.MousePosition.js') }}"></script>
 
     <!-- Routing Machine -->
@@ -22,6 +23,10 @@
     <script src="{{ asset('js/leaflet-routing-machine.js') }}"></script>
 
     <style>
+        .leaflet-routing-container {
+            display: none !important;
+        }
+
         #map {
             height: 100vh;
         }
@@ -83,18 +88,27 @@
             color: #555;
         }
 
-
-
+        .search-dropdown {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
     </style>
 </head>
+
 <body class="h-screen overflow-hidden">
 
     <!-- Layer Switcher -->
     <div id="layer-switcher" class="absolute top-4 right-4 bg-white shadow-md p-3 rounded hidden z-[9999]">
-        <button onclick="switchLayer('OpenStreetMap')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">OpenStreetMap</button>
-        <button onclick="switchLayer('Carto Light')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">Carto Light</button>
-        <button onclick="switchLayer('Carto Dark')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">Carto Dark</button>
-        <button onclick="switchLayer('ESRI Satellite')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">ESRI Satellite</button>
+        <button onclick="switchLayer('OpenStreetMap')"
+            class="block w-full text-left hover:bg-gray-200 px-4 py-2">OpenStreetMap</button>
+        <button onclick="switchLayer('Carto Light')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">Carto
+            Light</button>
+        <button onclick="switchLayer('Carto Dark')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">Carto
+            Dark</button>
+        <button onclick="switchLayer('ESRI Satellite')" class="block w-full text-left hover:bg-gray-200 px-4 py-2">ESRI
+            Satellite</button>
     </div>
 
     <div class="flex h-full w-full">
@@ -104,21 +118,41 @@
             <img src="{{ asset('image/polygon.svg') }}" alt="Network" class="w-6 h-6" id="polyline-icon">
             <img src="{{ asset('image/legend.svg') }}" alt="Map" class="w-6 h-6" id="legend-icon">
             <img src="{{ asset('image/route.svg') }}" alt="Route" class="w-6 h-6" id="route-icon">
+            <img src="{{ asset('image/export.svg') }}" alt="Route" class="w-6 h-6" id="export-icon">
+            <img src="{{ asset('image/import.svg') }}" alt="Route" class="w-6 h-6" id="import-icon">
         </div>
+
+        <input type="file" id="importFile" accept=".geojson,application/json" class="hidden" />
 
         <!-- Info Panel -->
         <div class="w-1/3 hidden" id="info-panel"></div>
 
         <!-- Routing -->
-        <div id="routing-panel" class="hidden overflow-auto top-0 left-[50px] w-[32%] h-full bg-white overflow-y-auto z-[9999] shadow-lg">
+        <div id="routing-panel"
+            class="hidden overflow-auto top-0 left-[50px] w-[32%] h-full bg-white overflow-y-auto z-[9999] shadow-lg">
             <div class="p-6">
                 <h2 class="text-xl font-bold text-[#374A6E] mb-4">Rute Perjalanan</h2>
 
-                <label class="block text-gray-700 mb-1">Titik Awal</label>
-                <input id="Titik_Awal" type="text" placeholder="Titik Awal" class="w-full p-2 mb-4 border rounded text-sm">
+                <label for="startPoint" class="block text-gray-700 mb-1">Titik Awal</label>
+                <select name="startPoint" id="startPoint" class="w-full p-2 mb-4 border rounded text-sm">
+                    <option value="" hidden>Pilih Titik Awal</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->latitude }},{{ $supplier->longitude }}">
+                            {{ $supplier->name }}</option>
+                    @endforeach
+                </select>
 
-                <label class="block text-gray-700 mb-1">Tujuan</label>
-                <input id="Tujuan" type="text" placeholder="Tujuan" class="w-full p-2 mb-4 border rounded text-sm">
+                <label for="destination" class="block text-gray-700 mb-1">Tujuan</label>
+                <select name="destination" id="destination" class="w-full p-2 mb-4 border rounded text-sm">
+                    <option value="" hidden>Pilih Tujuan</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->latitude }},{{ $supplier->longitude }}">
+                            {{ $supplier->name }}</option>
+                    @endforeach
+                </select>
+
+                <button id="find-route" class="bg-blue-600 p-2 hover:bg-blue-500 cursor-pointer rounded text-white">Cari
+                    rute</button>
 
                 <div id="route-info" class="text-sm text-gray-800 mt-2 overflow-y-auto border-t pt-4"></div>
             </div>
@@ -129,209 +163,356 @@
         <div id="map" class="flex-1"></div>
 
         <!-- Search Bar -->
-        <div id="searchBarWrapper" class="absolute top-6 left-1/2 transform -translate-x-1/2 z-[9999] w-1/3 transition-all duration-300">
+        <div id="searchBarWrapper"
+            class="absolute top-6 left-1/2 transform -translate-x-1/2 z-[9999] w-1/3 transition-all duration-300">
             <div class="relative w-full">
-                <input type="text" id="searchBox" placeholder="Search" 
+                <input type="text" id="searchBox" placeholder="Search"
                     class="w-full bg-white px-5 py-3 pr-12 rounded-full border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
-                <img src="{{ asset('image/search.svg') }}" 
-                    alt="search icon"
+                <img src="{{ asset('image/search.svg') }}" alt="search icon"
                     class="absolute bottom-1 right-6 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer" />
             </div>
             <ul id="searchResults" class="search-dropdown hidden"></ul>
         </div>
 
+
+
     </div>
 
 
 
-        <!-- Scripts -->
-        <script>
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const map = L.map('map').setView([-6.39177, 106.81854], 11);
+    <!-- Scripts -->
+    <script src="https://www.liedman.net/leaflet-routing-machine/dist/leaflet-routing-graphhopper.js"></script>
+    <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const map = L.map('map').setView([-6.3429, 106.8383], 11);
 
-            const baseLayers = {
-                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
-                }),
-                "Carto Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; Carto'
-                }),
-                "Carto Dark": L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; Carto'
-                }),
-                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        const baseLayers = {
+            "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }),
+            "Carto Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; Carto'
+            }),
+            "Carto Dark": L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; Carto'
+            }),
+            "ESRI Satellite": L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri'
                 })
+        };
+
+        document.getElementById('export-icon').addEventListener('click', () => {
+            fetch('/export-suppliers')
+                .then(response => {
+                    if (!response.ok) throw new Error("Export gagal");
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'suppliers.geojson';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                })
+                .catch(err => {
+                    alert("Gagal export GeoJSON.");
+                    console.error(err);
+                });
+        });
+
+        document.getElementById('import-icon').addEventListener('click', () => {
+            document.getElementById('importFile').click();
+        });
+
+        // Proses file GeoJSON
+        document.getElementById('importFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                try {
+                    const geojson = JSON.parse(event.target.result);
+
+                    const importedLayer = L.geoJSON(geojson, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.marker(latlng).bindPopup(`
+                        <strong>${feature.properties.name}</strong><br>
+                        ${feature.properties.address}<br>
+                        ${feature.properties.phone}
+                    `);
+                        }
+                    }).addTo(map);
+
+                    // Zoom otomatis ke data import
+                    const bounds = importedLayer.getBounds();
+                    map.fitBounds(bounds);
+
+                    alert('Import GeoJSON supplier berhasil!');
+                } catch (err) {
+                    alert('Format file tidak valid. Pastikan itu adalah file GeoJSON.');
+                    console.error(err);
+                }
             };
 
-            baseLayers["OpenStreetMap"].addTo(map);
+            reader.readAsText(file);
+        });
 
 
+        baseLayers["OpenStreetMap"].addTo(map);
 
-            // Fungsi ganti layer
-            function switchLayer(type) {
-                Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
-                baseLayers[type].addTo(map);
-                document.getElementById('layer-switcher').classList.add('hidden');
-            }
-            document.getElementById('layer-icon').addEventListener('click', () => {
-                document.getElementById('layer-switcher').classList.toggle('hidden');
-            });
+        let routeControl = null;
 
+        document.getElementById('find-route').addEventListener('click', function() {
+            const startPoint = document.getElementById('startPoint').value;
+            const destination = document.getElementById('destination').value;
 
+            if (startPoint && destination) {
+                const [startLat, startLng] = startPoint.split(',').map(Number);
+                const [destLat, destLng] = destination.split(',').map(Number);
 
-            // Fungsi Polyline
-            let drawing = false;
-            let currentPolyline = null;
-            let polylinePoints = [];
-            document.getElementById('polyline-icon').addEventListener('click', () => {
-                drawing = !drawing;
+                //reset route
+                if (routeControl) {
+                    map.removeControl(routeControl);
+                    routeControl = null;
+                }
 
-                if (drawing) {
-                    map.getContainer().style.cursor = 'crosshair';
-                    alert('Klik pada peta untuk mulai menggambar polyline. Klik titik terakhir dua kali atau tekan ENTER untuk menyelesaikan.');
-                } else {
-                    map.getContainer().style.cursor = '';
-                    if (currentPolyline) {
-                        map.removeLayer(currentPolyline);
-                        currentPolyline = null;
+                routeControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(startLat, startLng),
+                        L.latLng(destLat, destLng)
+                    ],
+                    routeWhileDragging: true,
+                    show: false,
+                    collapsible: true,
+                    createMarker: () => null,
+                    lineOptions: {
+                        styles: [{
+                            color: 'green',
+                            opacity: 1,
+                            weight: 5
+                        }]
                     }
-                    polylinePoints = [];
-                }
-            });
+                }).addTo(map);
+                routeControl.on('routesfound', function(e) {
+                    const routes = e.routes[0];
+                    const summary = routes.summary;
 
-            map.on('click', function (e) {
-                if (!drawing) return;
+                    //fit ke rute
+                    const bounds = L.latLngBounds(routes.coordinates);
+                    map.fitBounds(bounds);
 
-                const latlng = e.latlng;
-                polylinePoints.push(latlng);
+                    const infoDiv = document.getElementById('route-info');
+                    infoDiv.innerHTML = `
+                        <div class="flex items-center justify-between text-sm text-gray-800 mb-4 px-10">
+                            <div><b>Jarak:</b> ${(summary.totalDistance / 1000).toFixed(2)} km</div>
+                            <div><b>Waktu:</b> ${(summary.totalTime / 60).toFixed(0)} menit</div>
+                        </div>
+                    `;
 
-                if (currentPolyline) {
-                    currentPolyline.setLatLngs(polylinePoints);
-                } else {
-                    currentPolyline = L.polyline(polylinePoints, { color: 'blue' }).addTo(map);
-                }
-            });
+                    infoDiv.innerHTML += `<div class="mt-2 space-t-4">`;
 
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' && drawing && polylinePoints.length > 1) {
-                    finishPolyline();
-                }
-            });
+                    routes.instructions.forEach(function(inst) {
+                        const dist = inst.distance;
+                        const distText = dist >= 1000 ?
+                            (dist / 1000).toFixed(1) + ' km' :
+                            Math.round(dist) + ' m';
 
-            map.on('dblclick', function (e) {
-                if (drawing && polylinePoints.length > 1) {
-                    finishPolyline();
-                }
-            });
+                        infoDiv.innerHTML += `
+                    <div class="border-b py-3">
+                        <div class="flex justify-between items-start">
+                            <div class="text-sm text-gray-800">${inst.text}</div>
+                            <div class="text-sm font-semibold text-red-600">${distText}</div>
+                        </div>
+                    </div>`;
+                    });
 
-            function finishPolyline() {
-                drawing = false;
+                    infoDiv.innerHTML += `</div>`;
+
+                });
+            } else {
+                alert('Silakan pilih titik awal dan tujuan.');
+            }
+        });
+
+        // Fungsi ganti layer
+        function switchLayer(type) {
+            Object.values(baseLayers).forEach(layer => map.removeLayer(layer));
+            baseLayers[type].addTo(map);
+            document.getElementById('layer-switcher').classList.add('hidden');
+        }
+        document.getElementById('layer-icon').addEventListener('click', () => {
+            document.getElementById('layer-switcher').classList.toggle('hidden');
+        });
+
+
+
+        // Fungsi Polyline
+        let drawing = false;
+        let currentPolyline = null;
+        let polylinePoints = [];
+        document.getElementById('polyline-icon').addEventListener('click', () => {
+            drawing = !drawing;
+
+            if (drawing) {
+                map.getContainer().style.cursor = 'crosshair';
+                alert(
+                    'Klik pada peta untuk mulai menggambar polyline. Klik titik terakhir dua kali atau tekan ENTER untuk menyelesaikan.'
+                );
+            } else {
                 map.getContainer().style.cursor = '';
+                if (currentPolyline) {
+                    map.removeLayer(currentPolyline);
+                    currentPolyline = null;
+                }
+                polylinePoints = [];
+            }
+        });
 
+        map.on('click', function(e) {
+            if (!drawing) return;
+
+            const latlng = e.latlng;
+            polylinePoints.push(latlng);
+
+            if (currentPolyline) {
+                currentPolyline.setLatLngs(polylinePoints);
+            } else {
+                currentPolyline = L.polyline(polylinePoints, {
+                    color: 'blue'
+                }).addTo(map);
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && drawing && polylinePoints.length > 1) {
+                finishPolyline();
+            }
+        });
+
+        map.on('dblclick', function(e) {
+            if (drawing && polylinePoints.length > 1) {
+                finishPolyline();
+            }
+        });
+
+        function finishPolyline() {
+            drawing = false;
+            map.getContainer().style.cursor = '';
+
+            if (currentPolyline) {
+                map.removeLayer(currentPolyline);
+            }
+
+            currentPolyline = L.polyline(polylinePoints, {
+                color: 'blue'
+            }).addTo(map);
+
+            polylinePoints = [];
+        }
+
+        map.on('click', (e) => {
+            if (!drawing) return;
+
+            polylinePoints.push(e.latlng);
+
+            if (polylinePoints.length > 1) {
                 if (currentPolyline) {
                     map.removeLayer(currentPolyline);
                 }
+                currentPolyline = L.polyline(polylinePoints, {
+                    color: 'red'
+                }).addTo(map);
+            }
+        });
 
-                currentPolyline = L.polyline(polylinePoints, { color: 'blue' }).addTo(map);
 
-                polylinePoints = [];
+        // Search Bar
+        let allSuppliers = [];
+
+        // Search Logic
+        const searchBox = document.getElementById('searchBox');
+        const searchResults = document.getElementById('searchResults');
+
+        searchBox.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            searchResults.innerHTML = '';
+
+            if (query.length === 0) {
+                searchResults.classList.add('hidden');
+                return;
             }
 
-            map.on('click', (e) => {
-                if (!drawing) return;
+            const filtered = allSuppliers.filter(s => s.name.toLowerCase().includes(query));
 
-                polylinePoints.push(e.latlng);
+            filtered.forEach(supplier => {
+                const li = document.createElement('li');
+                li.textContent = supplier.name;
+                li.className = "px-4 py-2 hover:bg-gray-200 cursor-pointer";
 
-                if (polylinePoints.length > 1) {
-                    if (currentPolyline) {
-                        map.removeLayer(currentPolyline);
-                    }
-                    currentPolyline = L.polyline(polylinePoints, { color: 'red' }).addTo(map);
-                }
-            });
+                li.addEventListener('click', () => {
+                    showInfoPanel(supplier);
+                    map.flyTo([supplier.latitude, supplier.longitude], 18, {
+                        animate: true,
+                        duration: 1.5,
 
-
-
-
-            // Search Bar
-            let allSuppliers = [];
-
-            // Search Logic
-            const searchBox = document.getElementById('searchBox');
-            const searchResults = document.getElementById('searchResults');
-
-            searchBox.addEventListener('input', function () {
-                const query = this.value.toLowerCase();
-                searchResults.innerHTML = '';
-
-                if (query.length === 0) {
-                    searchResults.classList.add('hidden');
-                    return;
-                }
-
-                const filtered = allSuppliers.filter(s => s.name.toLowerCase().includes(query));
-
-                filtered.forEach(supplier => {
-                    const li = document.createElement('li');
-                    li.textContent = supplier.name;
-                    li.className = "px-4 py-2 hover:bg-gray-200 cursor-pointer";
-
-                    li.addEventListener('click', () => {
-                        showInfoPanel(supplier);
-                        map.flyTo([supplier.latitude, supplier.longitude], 18, {
-                            animate: true,
-                            duration: 1.5,
-
-                        });
-
-                        searchResults.classList.add('hidden');
-                        searchBox.value = supplier.name;
-                        adjustSearchBarPosition();
                     });
 
-                    searchResults.appendChild(li);
+                    searchResults.classList.add('hidden');
+                    searchBox.value = supplier.name;
+                    adjustSearchBarPosition();
                 });
 
-                searchResults.classList.remove('hidden');
+                searchResults.appendChild(li);
             });
 
-            const results = document.getElementById('searchResults');
-            const latRef = -6.200000; // titik pusat
-            const lngRef = 106.816666;
+            searchResults.classList.remove('hidden');
+        });
 
-            let tempRoutingControl = null;
+        const results = document.getElementById('searchResults');
+        const latRef = -6.391840572; // titik pusat
+        const lngRef = 106.8184816;
 
-            function getRouteDistance(lat1, lng1, callback) {
+        let tempRoutingControl = null;
+
+        //penanda
+        function getRouteDistance(lat1, lng1, callback) {
             const routing = L.Routing.control({
-                waypoints: [
-                    L.latLng(latRef, lngRef),
-                    L.latLng(lat1, lng1)
-                ],
-                router: L.Routing.osrmv1({
-                    serviceUrl: 'https://router.project-osrm.org/route/v1'
-                }),
-                createMarker: () => null,
-                addWaypoints: false,
-                fitSelectedRoutes: false,
-                show: false
-            })
-            .on('routesfound', function (e) {
-                const route = e.routes[0];
-                const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
-                console.log('Got distance:', distanceKm);
-                callback(distanceKm);
-                routing.remove(tempRoutingControl);
-            })
-            .on('routingerror', function () {
-                console.warn('Routing error');
-                callback(null);
-                routing.remove(tempRoutingControl);
-            })
-            .addTo(map);
+                    waypoints: [
+                        L.latLng(latRef, lngRef),
+                        L.latLng(lat1, lng1)
+                    ],
+                    // router: L.Routing.osrmv1({
+                    //     serviceUrl: 'https://router.project-osrm.org/route/v1'
+                    // }),
+                    router: L.Routing.osrmv1({
+                        serviceUrl: 'https://routing.openstreetmap.de/routed-car/route/v1'
+                    }),
+                    createMarker: () => null,
+                    addWaypoints: false,
+                    fitSelectedRoutes: false,
+                    show: false,
+                    collapsible: true
+                })
+                .on('routesfound', function(e) {
+                    const route = e.routes[0];
+                    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+                    console.log('Got distance:', distanceKm);
+                    callback(distanceKm);
+                    routing.remove(tempRoutingControl);
+                })
+                .on('routingerror', function() {
+                    console.warn('Routing error');
+                    callback(null);
+                    routing.remove(tempRoutingControl);
+                })
+                .addTo(map);
         }
 
-        searchBox.addEventListener('focus', function () {
+        searchBox.addEventListener('focus', function() {
             if (this.value.trim() === '') {
                 fetch('/api/nearby-suppliers')
                     .then(res => res.json())
@@ -339,56 +520,68 @@
                         results.innerHTML = '';
                         results.classList.remove('hidden');
 
-                        data.forEach(supplier => {
-                            getRouteDistance(supplier.latitude, supplier.longitude, function (distanceKm) {
-                            const li = document.createElement('li');
+                        const distancePromises = data.map(supplier => {
+                            return new Promise(resolve => {
+                                getRouteDistance(supplier.latitude, supplier.longitude,
+                                    function(distanceKm) {
+                                        resolve({
+                                            ...supplier,
+                                            distance: distanceKm ? parseFloat(
+                                                distanceKm) : null
+                                        });
+                                    });
+                            });
+                        });
+
+                        Promise.all(distancePromises).then(suppliersWithDistance => {
+                            // Step 3: Urutkan berdasarkan jarak terdekat
+                            const sortedSuppliers = suppliersWithDistance
+                                .filter(s => s.distance !== null)
+                                .sort((a, b) => a.distance - b.distance);
+
+                            sortedSuppliers.forEach(supplier => {
+                                const li = document.createElement('li');
                                 li.classList.add('result-item');
                                 li.innerHTML = `
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <strong>${supplier.name}</strong><br>
-                                            ${supplier.address}
-                                        </div>
-                                        <div style="white-space: nowrap; font-weight: bold;">
-                                            ${distanceKm ? distanceKm + ' Km' : 'n/a'}
-                                        </div>
-                                    </div>
-                                `;
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>${supplier.name}</strong><br>
+                                    ${supplier.address}
+                                </div>
+                                <div style="white-space: nowrap; font-weight: bold;">
+                                    ${supplier.distance.toFixed(2)} Km
+                                </div>
+                            </div>
+                        `;
 
-                                  // 👇 Tambahkan ini agar bisa klik dan flyTo
-                                    li.addEventListener('click', () => {
-                                        showInfoPanel(supplier);
-                                        map.flyTo([supplier.latitude, supplier.longitude], 18, {
+                                li.addEventListener('click', () => {
+                                    showInfoPanel(supplier);
+                                    map.flyTo([supplier.latitude, supplier.longitude],
+                                        18, {
                                             animate: true,
                                             duration: 1.5
                                         });
 
-                                        results.classList.add('hidden');
-                                        searchBox.value = supplier.name;
-                                        adjustSearchBarPosition();
-                                    });
+                                    results.classList.add('hidden');
+                                    searchBox.value = supplier.name;
+                                    adjustSearchBarPosition();
+                                });
 
                                 searchResults.appendChild(li);
                             });
-                            searchResults.classList.remove('hidden');
                         });
                     });
             }
         });
 
-
-
-
-
-        
         // Ambil semua supplier sekali saja
-        fetch('/api/nearby-suppliers')
+        fetch('/api/suppliers')
             .then(res => res.json())
             .then(data => {
                 allSuppliers = data;
             });
 
-        searchBox.addEventListener('input', function () {
+        searchBox.addEventListener('input', function() {
             const query = this.value.toLowerCase().trim();
 
             if (query === '') {
@@ -404,7 +597,8 @@
             // Tunggu semua jarak selesai dihitung
             Promise.all(filtered.map(supplier => {
                 return new Promise(resolve => {
-                    getRouteDistance(supplier.latitude, supplier.longitude, function (distanceKm) {
+                    getRouteDistance(supplier.latitude, supplier.longitude, function(
+                        distanceKm) {
                         resolve({
                             ...supplier,
                             distance: distanceKm ? parseFloat(distanceKm) : null
@@ -435,7 +629,6 @@
                         </div>
                     `;
 
-                    // 👇 tambahkan ini
                     li.addEventListener('click', () => {
                         showInfoPanel(supplier);
                         map.flyTo([supplier.latitude, supplier.longitude], 18, {
@@ -464,8 +657,8 @@
         });
 
 
-            // Posisi Search
-            function adjustSearchBarPosition() {
+        // Posisi Search
+        function adjustSearchBarPosition() {
             const infoPanel = document.getElementById('info-panel');
             const routingPanel = document.getElementById('routing-panel');
             const searchBarWrapper = document.getElementById('searchBarWrapper');
@@ -476,22 +669,33 @@
             if (isInfoVisible || isRoutingVisible) {
                 searchBarWrapper.className = "absolute top-6 left-[50%] z-[9999] w-1/3 transition-all duration-300";
             } else {
-                searchBarWrapper.className = "absolute top-6 left-1/2 transform -translate-x-1/2 z-[9999] w-1/3 transition-all duration-300";
+                searchBarWrapper.className =
+                    "absolute top-6 left-1/2 transform -translate-x-1/2 z-[9999] w-1/3 transition-all duration-300";
             }
         }
 
         // legend
-        var legend = L.control({ position: 'bottomright' });
+        var legend = L.control({
+            position: 'bottomright'
+        });
 
-        legend.onAdd = function (map) {
+        legend.onAdd = function(map) {
             var div = L.DomUtil.create('div', 'bg-white p-4 rounded-lg shadow-lg text-sm space-y-2');
 
             div.innerHTML += `<div class="font-bold mb-2 text-gray-700">Keterangan :</div>`;
 
-            const categories = [
-                { name: 'Toko Pusat', icon: '{{ asset("image/Toko_Utama2.svg") }}' },
-                { name: 'Toko Cabang', icon: '{{ asset("image/Cabang2.svg") }}' },
-                { name: 'Partner', icon: '{{ asset("image/Partner2.svg") }}' },
+            const categories = [{
+                    name: 'Toko Pusat',
+                    icon: '{{ asset('image/Toko_Utama2.svg') }}'
+                },
+                {
+                    name: 'Toko Cabang',
+                    icon: '{{ asset('image/Cabang2.svg') }}'
+                },
+                {
+                    name: 'Partner',
+                    icon: '{{ asset('image/Partner2.svg') }}'
+                },
             ];
 
             categories.forEach(cat => {
@@ -509,7 +713,7 @@
 
         let legendAdded = false;
 
-        document.getElementById('legend-icon').addEventListener('click', function () {
+        document.getElementById('legend-icon').addEventListener('click', function() {
             if (!legendAdded) {
                 legend.addTo(map);
                 legendAdded = true;
@@ -521,25 +725,25 @@
 
         const categoryIcons = {
             "Toko Pusat": L.icon({
-                iconUrl: '{{ asset("image/Toko_Utama2.svg") }}',
+                iconUrl: '{{ asset('image/Toko_Utama2.svg') }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             }),
             "Toko Cabang": L.icon({
-                iconUrl: '{{ asset("image/Cabang2.svg") }}',
+                iconUrl: '{{ asset('image/Cabang2.svg') }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             }),
             "Partner": L.icon({
-                iconUrl: '{{ asset("image/Partner2.svg") }}',
+                iconUrl: '{{ asset('image/Partner2.svg') }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
             }),
             "default": L.icon({
-                iconUrl: '{{ asset("image/location.svg") }}',
+                iconUrl: '{{ asset('image/location.svg') }}',
                 iconSize: [40, 40],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
@@ -554,7 +758,7 @@
         L.control.mousePosition().addTo(map);
 
         // Routing Machine
-        document.getElementById('route-icon').addEventListener('click', function () {
+        document.getElementById('route-icon').addEventListener('click', function() {
             const routingPanel = document.getElementById('routing-panel');
             const isHidden = routingPanel.classList.contains('hidden');
 
@@ -567,69 +771,17 @@
         });
 
         const waypoints = [
-            L.latLng(-6.391840572, 106.8184816),
+            L.latLng(-6.391870572, 106.8184816),
             L.latLng(-6.213007656, 106.7813171)
         ];
 
-        let routeControl = L.Routing.control({
-            waypoints: waypoints,
-            routeWhileDragging: true,
-            show: false,
-            addWaypoints: true,
-            draggableWaypoints: true,
-            createMarker: function() { return null; },
-            lineOptions: {
-                styles: [{ color: 'green', opacity: 1, weight: 5 }]
-            }
-        }).addTo(map);
-
-        routeControl.on('routesfound', function (e) {
-            const routes = e.routes[0];
-            const summary = routes.summary;
-
-            document.getElementById("Titik_Awal").value = 
-                routes.waypoints[0].latLng.lat + ',' + routes.waypoints[0].latLng.lng;
-
-            document.getElementById("Tujuan").value = 
-                routes.waypoints[1].latLng.lat + ',' + routes.waypoints[1].latLng.lng;
-
-            const infoDiv = document.getElementById('route-info');
-            infoDiv.innerHTML = `
-                <div class="flex items-center justify-between text-sm text-gray-800 mb-4 px-10">
-                    <div><b>Jarak:</b> ${(summary.totalDistance / 1000).toFixed(2)} km</div>
-                    <div><b>Waktu:</b> ${(summary.totalTime / 60).toFixed(0)} menit</div>
-                </div>
-            `;
-
-            infoDiv.innerHTML += `<div class="mt-2 space-t-4">`;
-
-            routes.instructions.forEach(function (inst) {
-                const dist = inst.distance;
-                const distText = dist >= 1000 
-                    ? (dist / 1000).toFixed(1) + ' km' 
-                    : Math.round(dist) + ' m';
-
-                infoDiv.innerHTML += `
-                    <div class="border-b py-3">
-                        <div class="flex justify-between items-start">
-                            <div class="text-sm text-gray-800">${inst.text}</div>
-                            <div class="text-sm font-semibold text-red-600">${distText}</div>
-                        </div>
-                    </div>`;
-            });
-
-            infoDiv.innerHTML += `</div>`;
-
-                    });
-
-
         // Info Panel
         function showInfoPanel(supplier) {
-        const panel = document.getElementById('info-panel');
-        panel.classList.remove('hidden');
-        panel.innerHTML = `
+            const panel = document.getElementById('info-panel');
+            panel.classList.remove('hidden');
+            panel.innerHTML = `
             <div class="bg-white overflow-auto" id="info-panel">
-                <img src="${supplier.image_url}" class="rounded mb-2 w-full h-80" alt="${supplier.name}">
+                <img src="${supplier.photo_url}" class="rounded mb-2 w-full h-80" alt="${supplier.name}">
                 <div class="mb-12 pb-4 mx-6">
                     <h2 class="text-xl font-bold text-[#374A6E] mt-6">${supplier.name}</h2>
                     <p class="text-[#374A6E] text-md mb-2">${supplier.description}</p>
@@ -655,8 +807,8 @@
                 </div>
             </div>
         `;
-        adjustSearchBarPosition();
-    }   
+            adjustSearchBarPosition();
+        }
 
         let lastOpenedSupplierId = null;
 
@@ -666,13 +818,15 @@
             .then(data => {
                 data.forEach(supplier => {
                     const icon = categoryIcons[supplier.category] || categoryIcons["default"];
-                    const marker = L.marker([supplier.latitude, supplier.longitude], { icon }).addTo(map);
+                    const marker = L.marker([supplier.latitude, supplier.longitude], {
+                        icon
+                    }).addTo(map);
                     supplier.marker = marker;
 
                     const popupContent = `
                         <b>${supplier.name}</b><br>
                         ${supplier.address}<br>
-                        <img src="${supplier.image_url}" alt="${supplier.name}" style="width:100px; margin-top:5px;">
+                        <img src="${supplier.photo_url}" alt="${supplier.name}" style="width:100px; margin-top:5px;">
                         <p style="margin-top:5px">${supplier.description}</p>
                         <p>${supplier.phone}</p>
                     `;
@@ -700,29 +854,25 @@
             });
 
 
-                function togglePanel(panelIdToShow) {
-                    const infoPanel = document.getElementById('info-panel');
-                    const routingPanel = document.getElementById('routing-panel');
+        function togglePanel(panelIdToShow) {
+            const infoPanel = document.getElementById('info-panel');
+            const routingPanel = document.getElementById('routing-panel');
 
-                    // Sembunyikan semua panel dulu
-                    infoPanel.classList.add('hidden');
-                    routingPanel.classList.add('hidden');
+            // Sembunyikan semua panel dulu
+            infoPanel.classList.add('hidden');
+            routingPanel.classList.add('hidden');
 
-                    // Tampilkan panel yang diminta
-                    if (panelIdToShow === 'info') {
-                        infoPanel.classList.remove('hidden');
-                    } else if (panelIdToShow === 'routing') {
-                        routingPanel.classList.remove('hidden');
-                    }
+            // Tampilkan panel yang diminta
+            if (panelIdToShow === 'info') {
+                infoPanel.classList.remove('hidden');
+            } else if (panelIdToShow === 'routing') {
+                routingPanel.classList.remove('hidden');
+            }
 
-                    adjustSearchBarPosition();
-                }
-
-
-                
-        </script>
-
-
+            adjustSearchBarPosition();
+        }
+    </script>
 
 </body>
+
 </html>

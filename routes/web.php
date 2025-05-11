@@ -17,9 +17,8 @@ use App\Http\Controllers\PolylineController;
 Route::get('/', [CompanyProfileController::class, 'index'])->name('company-profile.index');
 Route::get('/catalog', [CompanyProfileController::class, 'catalog'])->name('company-profile.catalog');
 
-Route::get('/webgis', function () {
-    return view('webgis');
-})->name('webgis');
+Route::get('/webgis', [SupplierController::class, 'webgis'])->name('webgis');
+Route::get('/export-suppliers', [SupplierController::class, 'exportGeoJSON']);
 
 Route::get('/api/nearby-suppliers', [\App\Http\Controllers\SupplierController::class, 'getNearbySuppliers']);
 

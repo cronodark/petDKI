@@ -14,6 +14,41 @@ class SupplierController extends Controller
         $suppliers = Supplier::paginate(5);
         return view('dashboard.warehouse.supplier.main', compact('suppliers'));
     }
+
+    public function exportGeoJSON()
+    {
+        $features = DB::table('suppliers')
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get()
+            ->map(function ($supplier) {
+                return [
+                    "type" => "Feature",
+                    "geometry" => [
+                        "type" => "Point",
+                        "coordinates" => [(float) $supplier->longitude, (float) $supplier->latitude],
+                    ],
+                    "properties" => [
+                        "id" => $supplier->id,
+                        "name" => $supplier->name,
+                        "address" => $supplier->address,
+                        "phone" => $supplier->phone,
+                        "description" => $supplier->description,
+                        "category" => $supplier->category,
+                    ],
+                ];
+            });
+
+        $geojson = [
+            "type" => "FeatureCollection",
+            "features" => $features,
+        ];
+
+        return response()->json($geojson, 200, [
+            'Content-Type' => 'application/geo+json',
+            'Content-Disposition' => 'attachment; filename="suppliers.geojson"',
+        ]);
+    }
     public function getSuppliers()
     {
         $data = DB::table('suppliers')
@@ -21,7 +56,7 @@ class SupplierController extends Controller
                 'id',
                 'name',
                 'description',
-                'photo_url as image_url',
+                'photo_url',
                 'address',
                 'latitude',
                 'longitude',
@@ -38,7 +73,8 @@ class SupplierController extends Controller
         return view('dashboard.warehouse.supplier.add');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required',
             'address' => 'required',
@@ -103,9 +139,9 @@ class SupplierController extends Controller
 
     public function getNearbySuppliers()
     {
-        $refLat = request()->query('lat', -6.200000);
-        $refLng = request()->query('lng', 106.816666);
-    
+        $refLat = request()->query('lat', -6.39071031765324);
+        $refLng = request()->query('lng', 106.81636083041856);
+
         $suppliers = DB::table('suppliers')
             ->select(
                 'id',
@@ -118,18 +154,16 @@ class SupplierController extends Controller
                 'photo_url',
                 'category',
                 DB::raw("ST_DistanceSphere(
-                    ST_MakePoint(longitude::float, latitude::float),
-                    ST_MakePoint($refLng, $refLat)
-                ) as distance")
+                ST_MakePoint(longitude::float, latitude::float),
+                ST_MakePoint(?, ?)
+            ) as distance")
             )
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->orderBy('distance')
-            ->limit(5)
+            ->setBindings([$refLng, $refLat])
             ->get();
-    
+
         return response()->json($suppliers);
     }
-    
-    
 }
