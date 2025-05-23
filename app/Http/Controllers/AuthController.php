@@ -35,9 +35,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashboard')->with('success', "Login Berhasil!"); // redirect ke halaman dashboard
         }
-        return back()->withErrors([
-            'identifier' => 'The provided credentials do not match our records.',
-        ]);
+        return back()->with('error', 'Login gagal, silahkan coba lagi');
     }
 
     public function logout(Request $request)
