@@ -275,7 +275,7 @@
                                 <h3 class="text-gray-300 text-sm uppercase font-semibold mb-2">Inventory</h3>
                                 <div class="nav-item w-full">
                                     <a href="{{ route('warehouse.categories.index') }}"
-                                        class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.categories.index' ? 'active' : '' }}">
+                                        class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.categories.index' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.categories.edit' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.categories.create' ? 'active' : '' }}">
                                         <svg width="28" height="24" viewBox="0 0 42 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="fill-current">
                                             <path
@@ -284,7 +284,7 @@
                                         <span class="grow shrink self-center">Kategori</span>
                                     </a>
                                 </div>
-                                <div class="nav-item w-full mt-2">
+                                {{-- <div class="nav-item w-full mt-2">
                                     <a href="{{ route('warehouse.suppliers.index') }}"
                                         class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.suppliers.index' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.suppliers.create' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.suppliers.edit' ? 'active' : '' }}">
                                         <svg width="24" height="24" viewBox="0 0 40 40" fill="none"
@@ -294,7 +294,7 @@
                                         </svg>
                                         <span class="grow shrink self-center">Supplier</span>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <div class="nav-item w-full mt-2">
                                     <a href="{{ route('warehouse.stockadj.index') }}"
                                         class="flex gap-4 self-stretch ps-6 py-3 text-lg font-medium whitespace-nowrap rounded-[30px_30px_30px_30px] text-white hover:bg-slate-500 transition nav-link {{ Route::currentRouteName() == 'warehouse.stockadj.index' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.stockadj.create' ? 'active' : '' }} {{ Route::currentRouteName() == 'warehouse.stockadj.edit' ? 'active' : '' }}">
@@ -303,7 +303,7 @@
                                             <path
                                                 d="M8.22148 16.1842H13.3893V21.3158H8.22148V16.1842ZM8.22148 28.1414H13.3893V23.0099H8.22148V28.1414ZM8.22148 34.9507H13.3893V29.8191H8.22148V34.9507ZM14.923 28.1414H20.077V23.0099H14.9092V28.1414H14.923ZM14.923 34.9507H20.077V29.8191H14.9092V34.9507H14.923ZM21.6246 29.8191V34.9507H26.7923V29.8191H21.6246ZM35 9.80263L17.4931 0L0 9.83553L1.09159 12.5493L3.31623 11.2829V34.9671H5.83103V11.1842H29.1828V35H31.6976V11.3158L33.9222 12.5493L35 9.80263Z"/>
                                         </svg>
-                                        <span class="grow shrink self-center">Stock</span>
+                                        <span class="grow shrink self-center">Stok</span>
                                     </a>
                                 </div>
                             </div>

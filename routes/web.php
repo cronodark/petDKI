@@ -72,8 +72,7 @@ Route::middleware("auth")->group(function () {
             Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
             // Categories
             Route::resource('categories', CategoryController::class)->except(['show']);
-            Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])
-                ->name('categories.delete');
+            Route::get('/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.delete');
             //stockadjust
             Route::get('/stockadjust', [StockAdjustController::class, 'index'])->name('stockadj.index');
             Route::get('/stockadjust/create', [StockAdjustController::class, 'create'])->name('stockadj.create');

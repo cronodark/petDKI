@@ -3,7 +3,7 @@
     <section
         class="flex flex-wrap gap-5 justify-between w-full font-bold whitespace-nowrap max-md:mt-10 max-md:mr-2.5 max-md:max-w-full fade-in"
         style="animation-delay: 0.4s">
-        <h2 class="my-auto text-4xl text-blue-950 mb-5">Transaction</h2>
+        <h2 class="my-auto text-4xl text-blue-950 mb-5">Transaksi</h2>
 
         <!-- Action Buttons -->
         <div class="flex gap-8 text-xl text-slate-600">

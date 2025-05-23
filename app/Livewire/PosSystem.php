@@ -119,9 +119,9 @@ class PosSystem extends Component
             session()->flash('error', 'Gagal menyimpan transaksi.');
         }
 
-        //trigger event print
+        
         $this->dispatch('print-receipt');
-        // Here you would typically save the order to the database
+
         $this->reset(['cart', 'totalPrice']);
     }
 

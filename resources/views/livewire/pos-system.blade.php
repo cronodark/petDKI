@@ -1,6 +1,6 @@
 <div wire:poll.keep-alive wire:ignore.self class="flex flex-col lg:flex-row bg-white w-full">
     <!-- Cart Side -->
-    <section class="lg:w-[36%] w-full pt-5 border-2 shadow-lg min-h-screen max-h-fit">
+    <section class="lg:w-[36%] w-full pt-5 border-2 shadow-lg min-h-screen max-h-max">
         <div class="px-6 pb-4">
             <div class="flex items-start gap-4 mb-3 border-b-2 pb-5">
                 <a href="{{ route('transactions.index') }}">
@@ -95,7 +95,8 @@
 
                 <button wire:click="payNow" id="payNowButton"
                     class="mt-6 w-full py-3 px-5 bg-slate-600 text-white text-lg font-semibold rounded hover:bg-slate-700 transition">
-                    <div class="flex justify-between"><span>Bayar</span><span>Rp{{ number_format($totalPrice, 0, ',', '.') }}</span></div>
+                    <div class="flex justify-between">
+                        <span>Bayar</span><span>Rp{{ number_format($totalPrice, 0, ',', '.') }}</span></div>
                 </button>
             </div>
         </div>
@@ -110,7 +111,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6">
             @foreach ($products as $product)
                 <div wire:click="addToCart({{ $product->id }})"
-                    class="cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition">
+                    class="cursor-pointer bg-white rounded-lg shadow hover:shadow-lg transition h-full flex flex-col">
                     @if ($product->photo)
                         <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->product_name }}"
                             class="w-full h-40 object-cover rounded-t-lg" />
@@ -118,7 +119,7 @@
                         <img src="{{ asset('images/default.jpg') }}" alt="{{ $product->product_name }}"
                             class="w-full h-40 object-cover rounded-t-lg" />
                     @endif
-                    <div class="bg-slate-600 text-white p-3 rounded-b-lg text-center font-semibold">
+                    <div class="bg-slate-600 text-white p-3 rounded-b-lg text-center font-semibold flex-1">
                         {{ $product->product_name }}
                     </div>
                 </div>

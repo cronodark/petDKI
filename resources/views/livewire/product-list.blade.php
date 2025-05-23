@@ -1,6 +1,6 @@
     <div class="w-full font-medium max-md:max-w-full">
         <div class="flex flex-wrap gap-5 justify-between w-full font-bold max-md:max-w-full">
-            <h2 class="my-auto text-4xl text-blue-950">Product</h2>
+            <h2 class="my-auto text-4xl text-blue-950">Produk</h2>
             <div class="flex gap-2">
                 @if (auth()->user()->role === 'warehouse')
                     <a href="{{ route('warehouse.products.create') }}"

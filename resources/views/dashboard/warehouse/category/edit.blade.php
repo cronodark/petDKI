@@ -21,10 +21,16 @@
                 @error('category_name')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <button type="submit"
-                    class="px-8 py-3 mt-8 text-xl font-bold text-white rounded-2xl bg-slate-600 hover:bg-slate-700 transition-colors">
-                    Simpan
-                </button>
+                <div class="flex items-center">
+                    <a href="{{ route('warehouse.categories.index') }}"
+                        class="px-8 py-3 mt-8 text-xl font-bold text-slate-600 rounded-2xl bg-transparent border border-slate-700 hover:shadow me-3">
+                        Kembali
+                    </a>
+                    <button type="submit"
+                        class="px-8 py-3 mt-8 text-xl font-bold text-white rounded-2xl bg-slate-600 hover:bg-slate-700 transition-colors">
+                        Simpan
+                    </button>
+                </div>
             </form>
         </div>
     </section>

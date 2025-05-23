@@ -15,7 +15,7 @@
                         @elseif($userRole == 'manager')
                             Manager Dashboard
                         @elseif($userRole == 'cashier')
-                            Cashier Dashboard
+                            Kasir Dashboard
                         @else
                             Inventory Dashboard
                         @endif
