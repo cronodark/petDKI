@@ -4,8 +4,9 @@
 @endsection
 @section('content')
     @livewire('employee-list')
+    @include('partials.confirmation')
 @endsection
-@include('partials.confirmation')
+
 
 @section('script')
     @livewireScripts

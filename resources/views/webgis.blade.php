@@ -239,11 +239,21 @@
 
                     const importedLayer = L.geoJSON(geojson, {
                         pointToLayer: function(feature, latlng) {
-                            return L.marker(latlng).bindPopup(`
-                        <strong>${feature.properties.name}</strong><br>
-                        ${feature.properties.address}<br>
-                        ${feature.properties.phone}
-                    `);
+                            const rawCat = feature.properties.category?.trim().toLowerCase();
+                            const categoryMap = {
+                                "toko pusat": "Toko Pusat",
+                                "toko cabang": "Toko Cabang",
+                                "partner": "Partner"
+                            };
+                            const icon = categoryIcons[categoryMap[rawCat]] || categoryIcons[
+                                "default"];
+                            return L.marker(latlng, {
+                                icon
+                            }).bindPopup(`
+                                <strong>${feature.properties.name}</strong><br>
+                                ${feature.properties.address}<br>
+                                ${feature.properties.phone}
+                            `);
                         }
                     }).addTo(map);
 
