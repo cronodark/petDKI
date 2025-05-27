@@ -258,8 +258,8 @@
                     }).addTo(map);
 
                     // Zoom otomatis ke data import
-                    const bounds = importedLayer.getBounds();
-                    map.fitBounds(bounds);
+                    // const bounds = importedLayer.getBounds();
+                    // map.fitBounds(bounds);
 
                     alert('Import GeoJSON supplier berhasil!');
                 } catch (err) {

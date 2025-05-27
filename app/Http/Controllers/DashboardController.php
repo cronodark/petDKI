@@ -91,17 +91,17 @@ class DashboardController extends Controller
             ->get();
 
         // Monthly stock movement
-        $data['stockMovement'] = DB::table('stock_adjustments')
-            ->select(
-                DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE 0 END) as total_in'),
-                DB::raw('SUM(CASE WHEN adjustment_type = "out" THEN quantity ELSE 0 END) as total_out')
-            )
-            ->where('created_at', '>=', Carbon::now()->subDays(30)) // using 30 days as in the UI
-            ->first();
+        // $data['stockMovement'] = DB::table('stock_adjustments')
+        //     ->select(
+        //         DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE 0 END) as total_in'),
+        //         DB::raw('SUM(CASE WHEN adjustment_type = "out" THEN quantity ELSE 0 END) as total_out')
+        //     )
+        //     ->where('created_at', '>=', Carbon::now()->subDays(30)) // using 30 days as in the UI
+        //     ->first();
 
-        $data['stockAdjustment'] = StockAdjustments::all()->groupBy(function ($stockAdjustment) {
-            return Carbon::parse($stockAdjustment->created_at)->format('Y-m-d');
-        });
+        // $data['stockAdjustment'] = StockAdjustments::all()->groupBy(function ($stockAdjustment) {
+        //     return Carbon::parse($stockAdjustment->created_at)->format('Y-m-d');
+        // });
 
         $stockAdjustment = StockAdjustments::all();
 
@@ -123,20 +123,20 @@ class DashboardController extends Controller
             });
 
         // Stock history over time (last 6 months)
-        $data['stockHistory'] = DB::table('stock_adjustments')
-            ->select(
-                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-                DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE -quantity END) as net_change')
-            )
-            ->where('created_at', '>=', Carbon::now()->subMonths(6))
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->map(function ($item) {
-                $monthDate = Carbon::createFromFormat('Y-m', $item->month);
-                $item->month_name = $monthDate->format('F Y');
-                return $item;
-            });
+        // $data['stockHistory'] = DB::table('stock_adjustments')
+        //     ->select(
+        //         DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+        //         DB::raw('SUM(CASE WHEN adjustment_type = "in" THEN quantity ELSE -quantity END) as net_change')
+        //     )
+        //     ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        //     ->groupBy('month')
+        //     ->orderBy('month')
+        //     ->get()
+        //     ->map(function ($item) {
+        //         $monthDate = Carbon::createFromFormat('Y-m', $item->month);
+        //         $item->month_name = $monthDate->format('F Y');
+        //         return $item;
+        //     });
 
         $data['userRole'] = 'warehouse';
 
